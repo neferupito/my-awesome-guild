@@ -6,17 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuildBlz {
+public class RaceBlz {
 
-    private Long lastModified;
-    private String name;
-    private String realm;
-    private String battlegroup;
-    private List<MembershipBlz> members;
+    private List<Rc> races;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Rc {
+
+        private Map<String, String> name;
+        private Integer id;
+
+    }
 
 }

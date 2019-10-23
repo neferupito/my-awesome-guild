@@ -1,9 +1,7 @@
 package io.neferupito.myawesomeguild.data.repository.recruitment;
 
-import io.neferupito.myawesomeguild.data.domain.recruitment.Apply;
+import io.neferupito.myawesomeguild.data.domain.recruitment.Recruitment;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.UUID;
-
-public interface ApplyRepository extends CrudRepository<Apply, String> {
+public interface RecruitmentRepository extends CrudRepository<Recruitment, Long> {
 }

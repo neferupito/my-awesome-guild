@@ -1,4 +1,25 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
-public enum Race {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Race {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
 }

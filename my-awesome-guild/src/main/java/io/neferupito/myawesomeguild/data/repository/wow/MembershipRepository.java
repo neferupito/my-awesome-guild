@@ -1,11 +1,9 @@
-package io.neferupito.myawesomeguild.data.repository.recruitment.wow;
+package io.neferupito.myawesomeguild.data.repository.wow;
 
-import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
+import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-
-public interface GuildRepository extends CrudRepository<Guild, Long> {
+public interface MembershipRepository extends CrudRepository<Membership, Long> {
 
 //    @Query("SELECT a FROM Article a WHERE a.title=:title and a.category=:category")
 //    List<GuildEntity> findGuildBy(@Param("region") String region, @Param("category") String category);

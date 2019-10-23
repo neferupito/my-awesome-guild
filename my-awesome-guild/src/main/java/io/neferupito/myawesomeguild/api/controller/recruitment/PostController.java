@@ -1,4 +1,4 @@
-package io.neferupito.myawesomeguild.api.controller;
+package io.neferupito.myawesomeguild.api.controller.recruitment;
 
 public class PostController {
 }

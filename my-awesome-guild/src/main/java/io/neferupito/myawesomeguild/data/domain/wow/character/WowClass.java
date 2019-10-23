@@ -1,17 +1,25 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
-public enum Class {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    DEATH_KNIGHT,
-    DEMON_HUNTER,
-    DRUID,
-    HUNTER,
-    MAGE,
-    MONK,
-    PALADIN,
-    PRIEST,
-    ROGUE,
-    SHAMAN,
-    WARLOCK
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class WowClass {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
 }

@@ -1,9 +1,7 @@
-package io.neferupito.myawesomeguild.data.repository.recruitment.wow;
+package io.neferupito.myawesomeguild.data.repository.wow;
 
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
 import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
 
 public interface GuildRepository extends CrudRepository<Guild, Long> {
 

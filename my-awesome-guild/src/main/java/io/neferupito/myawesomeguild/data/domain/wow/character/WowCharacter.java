@@ -6,13 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "characters")
+@Table
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Character {
+public class WowCharacter {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
 }

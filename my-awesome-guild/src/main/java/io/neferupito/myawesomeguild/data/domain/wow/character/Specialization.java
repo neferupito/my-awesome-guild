@@ -1,7 +1,25 @@
-package io.neferupito.myawesomeguild.api.domain.wow.character;
+package io.neferupito.myawesomeguild.data.domain.wow.character;
 
-public enum Specialization {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Specialization {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
 }

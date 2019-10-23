@@ -11,12 +11,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuildBlz {
+public class BattlegroupBlz {
 
-    private Long lastModified;
-    private String name;
-    private String realm;
-    private String battlegroup;
-    private List<MembershipBlz> members;
+    private List<Bg> battlegroups;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Bg {
+        private String name;
+        private String slug;
+    }
 
 }

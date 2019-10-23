@@ -6,17 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuildBlz {
+public class RealmBlz {
 
-    private Long lastModified;
-    private String name;
-    private String realm;
-    private String battlegroup;
-    private List<MembershipBlz> members;
+    private List<Rlm> realms;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Rlm {
+
+        private Map<String, String> name;
+        private String slug;
+
+    }
 
 }

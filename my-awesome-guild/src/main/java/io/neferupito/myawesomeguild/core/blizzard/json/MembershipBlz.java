@@ -1,4 +1,4 @@
-package io.neferupito.myawesomeguild.data.domain.blizzard;
+package io.neferupito.myawesomeguild.core.blizzard.json;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

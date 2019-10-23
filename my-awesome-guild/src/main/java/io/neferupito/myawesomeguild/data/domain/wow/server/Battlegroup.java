@@ -11,19 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "servers")
+@Table
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Realm {
+public class Battlegroup {
 
     @Id
     @GeneratedValue
     private Long id;
+    private Region region;
     private String name;
-    private String slugName;
-    //    @ManyToOne
-    private Locale locale;
+    private String slug;
 
 }

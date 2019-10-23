@@ -20,6 +20,10 @@
         <level value="info"/>
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="com.zaxxer.hikari" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <root level="debug">
         <appender-ref ref="STDOUT"/>
     </root>
