@@ -21,8 +21,9 @@ public class RaceBlz {
     @AllArgsConstructor
     public class Rc {
 
-        private Map<String, String> name;
         private Integer id;
+        private Map<String, String> name;
+        private String side;
 
     }
 

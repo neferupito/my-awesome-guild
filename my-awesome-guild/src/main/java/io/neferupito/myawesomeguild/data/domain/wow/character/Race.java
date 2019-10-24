@@ -1,5 +1,6 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
+import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,7 @@ public class Race {
     @Id
     @GeneratedValue
     private Long id;
+    private String name;
+    private Faction faction;
 
 }
