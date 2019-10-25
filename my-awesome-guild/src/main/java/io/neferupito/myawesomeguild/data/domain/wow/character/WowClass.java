@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class WowClass {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private Integer id;
+    private String name;
 
 }

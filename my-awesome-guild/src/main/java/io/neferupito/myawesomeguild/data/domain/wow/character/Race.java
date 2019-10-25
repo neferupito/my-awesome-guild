@@ -20,8 +20,7 @@ import javax.persistence.Table;
 public class Race {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private Integer id;
     private String name;
     private Faction faction;
 

@@ -1,25 +1,17 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+@Getter
+public enum Role {
 
-@Entity
-@Table
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Role {
+    HEALER("Soins"),
+    DAMAGE("DPS"),
+    TANK("Tank");
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    private String name;
 
+    Role(String name) {
+        this.name = name;
+    }
 }

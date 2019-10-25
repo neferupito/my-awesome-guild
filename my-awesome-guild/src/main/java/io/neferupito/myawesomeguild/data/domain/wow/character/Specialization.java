@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -19,7 +16,10 @@ import javax.persistence.Table;
 public class Specialization {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private Integer id;
+    private String name;
+    @ManyToOne
+    private WowClass wowClass;
+    private Role role;
 
 }

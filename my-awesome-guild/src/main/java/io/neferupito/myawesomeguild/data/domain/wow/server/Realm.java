@@ -19,8 +19,7 @@ import javax.persistence.Table;
 public class Realm {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private Integer id;
     private Region region;
     private String name;
     private String slug;

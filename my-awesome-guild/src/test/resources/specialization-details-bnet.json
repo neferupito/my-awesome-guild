@@ -1,0 +1,577 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://eu.api.blizzard.com/data/wow/playable-specialization/105?namespace=static-8.2.5_31884-eu"
+    }
+  },
+  "id": 105,
+  "playable_class": {
+    "key": {
+      "href": "https://eu.api.blizzard.com/data/wow/playable-class/11?namespace=static-8.2.5_31884-eu"
+    },
+    "name": "Druide",
+    "id": 11
+  },
+  "name": "Restauration",
+  "gender_description": {
+    "male": "Canalise la puissante magie de la Nature pour soigner ses alliés et les maintenir en vie.\r\n\r\nArmes : bâtons, dagues et masses.",
+    "female": "Canalise la puissante magie de la Nature pour soigner ses alliés et les maintenir en vie.\r\n\r\nArmes : bâtons, dagues et masses."
+  },
+  "media": {
+    "key": {
+      "href": "https://eu.api.blizzard.com/data/wow/media/playable-specialization/105?namespace=static-8.2.5_31884-eu"
+    },
+    "id": 105
+  },
+  "role": {
+    "type": "HEALER",
+    "name": "Soins"
+  },
+  "talent_tiers": [
+    {
+      "level": 15,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18569?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Abondance",
+            "id": 18569
+          },
+          "spell_tooltip": {
+            "description": "Pour chaque Récupération active, le coût de Rétablissement est réduit de 6% et ses chances d’effet critique sont augmentées de 6%.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18574?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Prospérité",
+            "id": 18574
+          },
+          "spell_tooltip": {
+            "description": "Prompte guérison a désormais 2 charges et son temps de recharge est réduit de 3 s.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18572?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Protection cénarienne",
+            "id": 18572
+          },
+          "spell_tooltip": {
+            "description": "Protège une cible alliée pendant 30 s. Si elle subit des dégâts, la protection disparaît en lui rendant 21 754 points de vie en 8 s.",
+            "cast_time": "Instantané",
+            "power_cost": "Mana : 1 840",
+            "range": "40 m de portée",
+            "cooldown": "30 s de recharge"
+          }
+        }
+      ]
+    },
+    {
+      "level": 30,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/19283?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Célérité du tigre",
+            "id": 19283
+          },
+          "spell_tooltip": {
+            "description": "Vous activez la forme de félin, ce qui augmente votre Vitesse de déplacement de 200%. Elle diminue ensuite graduellement pendant 5 s.",
+            "cast_time": "Instantané",
+            "cooldown": "45 s de recharge"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18570?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Renouveau",
+            "id": 18570
+          },
+          "spell_tooltip": {
+            "description": "Vous rend instantanément 30% de votre maximum de points de vie. Utilisable avec toutes les formes de druide.",
+            "cast_time": "Instantané",
+            "cooldown": "1,5 min de recharge"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18571?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Charge sauvage",
+            "id": 18571
+          },
+          "spell_tooltip": {
+            "description": "Confère une technique de déplacement qui dépend de la forme du druide :\r\n\r\nNon transformé\r\nVous volez vers la position d’un allié.\r\n\r\nForme d’ours\r\nVous chargez en direction d’un ennemi et l’immobilisez pendant 4 s.\r\n\r\nForme de félin\r\nVous bondissez derrière un ennemi et l’hébétez pendant 3 s.\r\n\r\nForme de voyage\r\nVous bondissez de 20 mètres en avant.\r\n\r\nForme aquatique\r\nAugmente la vitesse de nage de 150% supplémentaires pendant 5 s.",
+            "cast_time": "Instantané",
+            "range": "5-25 m de portée",
+            "cooldown": "15 s de recharge"
+          }
+        }
+      ]
+    },
+    {
+      "level": 45,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22366?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Affinité avec l’équilibre",
+            "id": 22366
+          },
+          "spell_tooltip": {
+            "description": "Vous gagnez :\r\n\r\n Influence astrale\r\nAugmente la portée de toutes vos techniques de 5 mètres.\r\n\r\nVous apprenez également :\r\n\r\n Forme de sélénien\r\n Éruption stellaire\r\n Frappe lunaire",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22367?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Affinité farouche",
+            "id": 22367
+          },
+          "spell_tooltip": {
+            "description": "Vous obtenez :\r\n\r\n Rapidité féline\r\nAugmente votre vitesse de déplacement de 15%.\r\n\r\nVous apprenez également :\r\n\r\n Griffure\r\n Déchirure\r\n Morsure féroce\r\n Balayage\r\n\r\nVotre régénération d’énergie est augmentée de 45%.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22160?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Affinité du gardien",
+            "id": 22160
+          },
+          "spell_tooltip": {
+            "description": "Vous obtenez :\r\n\r\n Peau épaisse\r\nRéduit les dégâts subis de 6%.\r\n\r\nVous apprenez également :\r\n\r\n Rosser\r\n Ferpoil\r\n Régénération frénétique",
+            "cast_time": "Passif"
+          }
+        }
+      ]
+    },
+    {
+      "level": 60,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/21778?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Rossée puissante",
+            "id": 21778
+          },
+          "spell_tooltip": {
+            "description": "Invoque l’esprit d’Ursoc pour étourdir la cible pendant 5 s. Utilisable avec toutes les formes de druide.",
+            "cast_time": "Instantané",
+            "range": "Allonge",
+            "cooldown": "50 s de recharge"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18576?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Enchevêtrement de masse",
+            "id": 18576
+          },
+          "spell_tooltip": {
+            "description": "Immobilise pendant 30 s la cible et tous les ennemis à moins de 15 mètres. Si une cible subit des dégâts, l’effet sur elle peut être interrompu. Utilisable avec toutes les formes de druide.",
+            "cast_time": "Instantané",
+            "range": "30 m de portée",
+            "cooldown": "30 s de recharge"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18577?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Typhon",
+            "id": 18577
+          },
+          "spell_tooltip": {
+            "description": "Déchaîne un violent typhon sur les cibles à moins de 15 mètres devant vous, ce qui les repousse et les hébète pendant 6 s. Utilisable avec toutes les formes de druide.",
+            "cast_time": "Instantané",
+            "cooldown": "30 s de recharge"
+          }
+        }
+      ]
+    },
+    {
+      "level": 75,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/21710?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Ame de la forêt",
+            "id": 21710
+          },
+          "spell_tooltip": {
+            "description": "Lorsque vous lancez Prompte guérison, vous bénéficiez d’Âme de la forêt qui augmente de 200% les soins de votre prochain sort Rétablissement ou Récupération, ou de 75% ceux de votre prochain sort Croissance sauvage.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/21705?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Culture",
+            "id": 21705
+          },
+          "spell_tooltip": {
+            "description": "Lorsque Récupération soigne une cible dont les points de vie sont inférieurs à 60%, celle-ci bénéficie de Culture, qui lui rend 1 976 points de vie en 6 s.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22421?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Incarnation : Arbre de vie",
+            "id": 22421
+          },
+          "spell_tooltip": {
+            "description": "Vous vous transformez en arbre de vie, ce qui augmente les soins prodigués de 15% et l’armure de 120%, et vous protège des effets de métamorphose. Augmente l’efficacité de Récupération, Croissance sauvage, Rétablissement et Sarments.\r\n\r\nDure 30 s. Vous pouvez librement adopter cette forme et la quitter pendant toute sa durée.",
+            "cast_time": "Instantané",
+            "cooldown": "3 min de recharge"
+          }
+        }
+      ]
+    },
+    {
+      "level": 90,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/21716?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Paix intérieure",
+            "id": 21716
+          },
+          "spell_tooltip": {
+            "description": "Réduit le temps de recharge de Tranquillité de 60 s.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/18585?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Ecorcepierre",
+            "id": 18585
+          },
+          "spell_tooltip": {
+            "description": "Réduit le temps de recharge d’Écorcefer de 15 s et augmente l’efficacité de vos effets de soin sur la durée de 20%.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22422?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Floraison printanière",
+            "id": 22422
+          },
+          "spell_tooltip": {
+            "description": "Chaque cible soignée par Efflorescence récupère 1 359 points de vie supplémentaires en 6 s.",
+            "cast_time": "Passif"
+          }
+        }
+      ]
+    },
+    {
+      "level": 100,
+      "talents": [
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22403?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Photosynthèse",
+            "id": 22403
+          },
+          "spell_tooltip": {
+            "description": "Lorsque vous lancez Fleur de vie sur vous-même, vos soins périodiques sont 20% plus rapides.\r\n\r\nLorsque vous lancez Fleur de vie sur un allié, les soins périodiques que vous lui prodiguez ont 5% de chances de la faire éclore.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/21651?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Germination",
+            "id": 21651
+          },
+          "spell_tooltip": {
+            "description": "Vous pouvez appliquer deux fois Récupération sur la même cible.",
+            "cast_time": "Passif"
+          }
+        },
+        {
+          "talent": {
+            "key": {
+              "href": "https://eu.api.blizzard.com/data/wow/talent/22404?namespace=static-8.2.5_31884-eu"
+            },
+            "name": "Epanouissement",
+            "id": 22404
+          },
+          "spell_tooltip": {
+            "description": "Prolonge de 8 s la durée de vos effets de soins sur la durée actifs sur les cibles alliées à moins de 60 mètres et augmente les effets de vos soins sur la durée de 100% pendant 8 s.",
+            "cast_time": "Instantané",
+            "cooldown": "1,5 min de recharge"
+          }
+        }
+      ]
+    }
+  ],
+  "pvp_talents": [
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/3?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Médaillon de gladiateur",
+        "id": 3
+      },
+      "spell_tooltip": {
+        "description": "Dissipe tous les effets affectant le déplacement et tous les effets qui provoquent une perte de contrôle de votre personnage en combat JcJ.",
+        "cast_time": "Instantané",
+        "cooldown": "2 min de recharge"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/4?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Adaptation",
+        "id": 4
+      },
+      "spell_tooltip": {
+        "description": "Dissipe tous les effets provoquant une perte de contrôle d’une durée minimum de 5 s. Cet effet ne peut se produire qu’une fois toutes les 1 min.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/5?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Implacable",
+        "id": 5
+      },
+      "spell_tooltip": {
+        "description": "Durée des effets de contrôle subis réduite de 20%. Ne se cumule pas avec d’autres effets similaires.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/59?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Libération",
+        "id": 59
+      },
+      "spell_tooltip": {
+        "description": "Efflorescence dissipe tous les effets de ralentissement qui affectent les cibles alliées en prodiguant des soins.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/690?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Nourrir",
+        "id": 690
+      },
+      "spell_tooltip": {
+        "description": "Rend 22 632 points de vie à une cible alliée et applique automatiquement l’un de vos sorts de soins sur la durée manquants à la cible. S’ils sont tous présents, Nourrir prodigue des soins critiques.",
+        "cast_time": "2 s d’incantation",
+        "power_cost": "Mana : 3 600",
+        "range": "40 m de portée"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/691?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Revitalisation",
+        "id": 691
+      },
+      "spell_tooltip": {
+        "description": "Lancer Récupération confère à la cible 2 charges de Revitaliser. \r\n\r\nRevitaliser rend 4 526 points de vie à la cible lorsqu’elle est touchée par un coup critique en mêlée et augmente la durée de Récupération de 2,7 s.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/692?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Écorce entravante",
+        "id": 692
+      },
+      "spell_tooltip": {
+        "description": "Ecorcefer procure également à la cible Emprise de la nature, qui immobilise les 2 premiers attaquants en mêlée pendant 8 s.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/697?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Épines",
+        "id": 697
+      },
+      "spell_tooltip": {
+        "description": "Couvre d’épines une cible alliée pendant 12 s. Quand elle est victime d’attaques en mêlée, ses attaquants subissent 7 544 points de dégâts de Nature.\r\n\r\nLeur vitesse de déplacement est également réduite de 50% pendant 4 s.",
+        "cast_time": "Instantané",
+        "power_cost": "Mana : 3 600",
+        "range": "40 m de portée",
+        "cooldown": "45 s de recharge"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/700?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Racines profondes",
+        "id": 700
+      },
+      "spell_tooltip": {
+        "description": "Augmente de 400% les dégâts requis pour annuler vos Sarments.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/835?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Croissance focalisée",
+        "id": 835
+      },
+      "spell_tooltip": {
+        "description": "Réduit le coût en mana de Fleur de vie de 8% et Fleur de vie applique également Croissance focalisée à la cible, ce qui augmente de 8% les soins de Fleur de vie. Cumulable jusqu’à 3 fois.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/838?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Lianes envahissantes",
+        "id": 838
+      },
+      "spell_tooltip": {
+        "description": "Lorsque votre Sarments est annulé, dissipé ou arrive à expiration, les dégâts physiques de la cible sont réduits de 25% pendant 4 s.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/839?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Lacis",
+        "id": 839
+      },
+      "spell_tooltip": {
+        "description": "Applique instantanément les effets de soins sur la durée de Fleur de vie, Récupération, Croissance sauvage et Rétablissement à la cible.",
+        "cast_time": "Instantané",
+        "power_cost": "Mana : 6 000",
+        "range": "40 m de portée",
+        "cooldown": "45 s de recharge"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/1215?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Printemps précoce",
+        "id": 1215
+      },
+      "spell_tooltip": {
+        "description": "L’incantation de Croissance sauvage est désormais instantanée et, lorsque vous soignez 6 alliés avec cette technique, vous bénéficiez de Pleine floraison. Cet effet est soumis à un temps de recharge de 30 s.\r\n\r\nPleine floraison\r\nVotre prochaine Croissance sauvage applique Fleur de vie aux cibles. Dure 30 s.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/1217?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Cyclone",
+        "id": 1217
+      },
+      "spell_tooltip": {
+        "description": "Projette la cible ennemie dans les airs. Elle est stupéfiée mais invulnérable pendant 6 s au maximum. Une seule cible peut être affectée par votre Cyclone à la fois.",
+        "cast_time": "1,7 s d’incantation",
+        "power_cost": "Mana : 2 000",
+        "range": "20 m de portée"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/3048?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Maître changeforme",
+        "id": 3048
+      },
+      "spell_tooltip": {
+        "description": "Votre Affinité du gardien, Affinité avec l’équilibre ou Affinité farouche est amplifiée et confère un effet supplémentaire.\r\n\r\nAffinité du gardien\r\nSous forme d’ours, chances de subir un coup critique en mêlée réduites de 10% en forme d’ours.\r\n\r\n Affinité avec l’équilibre\r\nSous forme de sélénien, le temps d’incantation de vos sorts Courroux solaire, Frappe lunaire et Éruption stellaire est réduit de 30% pendant 10 s.\r\n\r\n Affinité farouche\r\nSous forme de félin, dégâts augmentés de 25%.",
+        "cast_time": "Passif"
+      }
+    },
+    {
+      "talent": {
+        "key": {
+          "href": "https://eu.api.blizzard.com/data/wow/pvp-talent/3752?namespace=static-8.2.5_31884-eu"
+        },
+        "name": "Marque du fauve",
+        "id": 3752
+      },
+      "spell_tooltip": {
+        "description": "Protège les alliés, ce qui réduit de 15% les dégâts de zone et sur la durée de Nature, de Feu, de Givre et des Arcanes subis. Dure 1 heure.",
+        "cast_time": "Instantané",
+        "power_cost": "Mana : 1 000",
+        "range": "40 m de portée"
+      }
+    }
+  ]
+}
