@@ -1,14 +1,16 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
+import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
+import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
+import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
+import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
+import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -19,7 +21,20 @@ import javax.persistence.Table;
 public class WowCharacter {
 
     @Id
-    @GeneratedValue
     private Long id;
+    private String name;
+    @ManyToOne
+    private Race race;
+    private Integer level;
+    private Region region;
+    @ManyToOne
+    private Realm realm;
+    private Faction faction;
+    @ManyToOne
+    private WowClass wowClass;
+    @ManyToOne
+    private Specialization mainSpec;
+    @OneToOne
+    private Membership membership;
 
 }

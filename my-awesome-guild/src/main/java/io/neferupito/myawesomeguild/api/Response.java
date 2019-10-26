@@ -1,4 +1,4 @@
-package io.neferupito.myawesomeguild.api.domain.api;
+package io.neferupito.myawesomeguild.api;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Data
 public class Response<T> {
 
-    private HttpStatus errorHttpStatus;
+    private transient HttpStatus errorHttpStatus;
     private boolean isError;
     private T content;
 

@@ -5,6 +5,7 @@ import io.neferupito.myawesomeguild.core.blizzard.json.RaceBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.RealmBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.SpecializationBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.SpecializationDetailsBlz;
+import io.neferupito.myawesomeguild.data.domain.user.User;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Race;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Role;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Specialization;
@@ -12,6 +13,7 @@ import io.neferupito.myawesomeguild.data.domain.wow.character.WowClass;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
+import io.neferupito.myawesomeguild.data.repository.user.UserRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.RaceRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.RealmRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.SpecializationRepository;
@@ -35,8 +37,14 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     private WowClassRepository wowClassRepository;
     @Autowired
     private SpecializationRepository specializationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public void importAllData() {
+        userRepository.save(User.builder()
+                .email("a@a.a")
+                .build());
+
         importRaces();
         importSpecs();
         for (Specialization spec :
@@ -50,13 +58,14 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     }
 
     private void importRealms(Region region) {
+        log.debug("{} WoW realms import from Blizzard", region);
         try {
             String path = "/data/wow/realm/index";
             URI uri = new URI(
                     getScheme(),
                     region.toString().toLowerCase() + getAuthority(),
                     path,
-                    "locale=fr_FR" + "&" + "namespace=dynamic-" + region.toString().toLowerCase() + "&" + getTokenQuery(),
+                    getLocale() + "&" + "namespace=dynamic-" + region.toString().toLowerCase(),
                     null);
             String response = invokeBlizzardApi(uri);
             RealmBlz realmBlz = new Gson().fromJson(response, RealmBlz.class);
@@ -75,13 +84,14 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     }
 
     private void importRaces() {
+        log.debug("WoW races import from Blizzard");
         try {
             String path = "/wow/data/character/races";
             URI uri = new URI(
                     getScheme(),
                     "eu" + getAuthority(),
                     path,
-                    "locale=fr_FR" + "&" + getTokenQuery(),
+                    getLocale(),
                     null);
             String response = invokeBlizzardApi(uri);
             RaceBlz realmBlz = new Gson().fromJson(response, RaceBlz.class);
@@ -99,13 +109,14 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     }
 
     private void importSpecs() {
+        log.debug("WoW classes and specs import from Blizzard");
         try {
             String path = "/data/wow/playable-specialization/index";
             URI uri = new URI(
                     getScheme(),
                     "eu" + getAuthority(),
                     path,
-                    "namespace=static-eu" + "&" + "locale=fr_FR" + "&" + getTokenQuery(),
+                    "namespace=static-eu" + "&" + getLocale(),
                     null);
             String response = invokeBlizzardApi(uri);
             SpecializationBlz specializationBlz = new Gson().fromJson(response, SpecializationBlz.class);
@@ -122,13 +133,14 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     }
 
     private void importSpecDetails(Specialization spec) {
+        log.debug("Details for spec {} import from Blizzard", spec.getName());
         try {
             String path = "/data/wow/playable-specialization/" + spec.getId();
             URI uri = new URI(
                     getScheme(),
                     "eu" + getAuthority(),
                     path,
-                    "namespace=static-eu" + "&" + "locale=fr_FR" + "&" + getTokenQuery(),
+                    "namespace=static-eu" + "&" + getLocale(),
                     null);
             String response = invokeBlizzardApi(uri);
             SpecializationDetailsBlz specializationDetailsBlz = new Gson().fromJson(response, SpecializationDetailsBlz.class);

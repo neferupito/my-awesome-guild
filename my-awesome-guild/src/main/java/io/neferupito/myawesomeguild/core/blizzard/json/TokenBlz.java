@@ -1,20 +1,16 @@
 package io.neferupito.myawesomeguild.core.blizzard.json;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuildBlz {
+public class TokenBlz {
 
-    private Long id;
-    private String name;
-    private String realm;
-    private String battlegroup;
-    private List<MembershipBlz> members;
+    @SerializedName("access_token")
+    private String token;
 
 }

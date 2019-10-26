@@ -2,22 +2,39 @@ package io.neferupito.myawesomeguild;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.h2.tools.Server;
+import org.springframework.core.Ordered;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 @SpringBootApplication
+@EnableScheduling
 public class MyAwesomeGuildApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MyAwesomeGuildApplication.class, args);
     }
 
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server inMemoryH2DatabaseaServer() throws SQLException {
-        return Server.createTcpServer(
-                "-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
+    @Bean
+    public FilterRegistrationBean simpleCorsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        // *** URL below needs to match the Vue client URL and port ***
+        config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 
 }

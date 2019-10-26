@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,7 +15,7 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Realm {
+public class Realm implements Comparable<Realm> {
 
     @Id
     private Integer id;
@@ -24,4 +23,8 @@ public class Realm {
     private String name;
     private String slug;
 
+    @Override
+    public int compareTo(Realm realm) {
+        return this.slug.compareTo(realm.slug);
+    }
 }
