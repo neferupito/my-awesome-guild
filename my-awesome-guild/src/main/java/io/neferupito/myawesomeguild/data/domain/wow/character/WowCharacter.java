@@ -1,6 +1,6 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
-import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
+import io.neferupito.myawesomeguild.data.domain.user.User;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
@@ -36,5 +36,8 @@ public class WowCharacter {
     private Specialization mainSpec;
     @OneToOne
     private Membership membership;
+    @ManyToOne
+    @JoinColumn()
+    private User user;
 
 }

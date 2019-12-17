@@ -1,6 +1,7 @@
 package io.neferupito.myawesomeguild.core.blizzard.client;
 
 import com.google.gson.Gson;
+import io.neferupito.myawesomeguild.core.blizzard.client.exception.BlizzardException;
 import io.neferupito.myawesomeguild.core.blizzard.json.TokenBlz;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public abstract class BlizzardClient {
     private String authority = ".api.blizzard.com";
     private String locale = "locale=fr_FR";
 
-    protected String invokeBlizzardApi(URI uri) {
+    protected String invokeBlizzardApi(URI uri) throws BlizzardException {
         StringBuilder content = new StringBuilder();
         try {
             if (token == null) {
@@ -35,15 +36,21 @@ public abstract class BlizzardClient {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            if (con.getResponseCode() != 200) {
+                throw new BlizzardException(con.getResponseCode(), con.getResponseMessage());
+            } else {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                log.debug("Response received: {}", content.toString());
             }
-            in.close();
             con.disconnect();
-            log.debug("Response received: {}", content.toString());
+        } catch (BlizzardException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Error call bnet");
         }

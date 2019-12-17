@@ -25,9 +25,6 @@ public class UserController {
                     User user) {
         System.err.println("USER RECEIVED\n"+user.toString());
         Response response = userService.createNewUser(user);
-        if (response.isError()) {
-            return ResponseEntity.status(response.getErrorHttpStatus()).build();
-        }
         return ResponseEntity.ok(response);
 
     }
@@ -35,9 +32,6 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<Response<Iterable<User>>> findAllUsers() {
         Response response = userService.findAllUsers();
-        if (response.isError()) {
-            return ResponseEntity.status(response.getErrorHttpStatus()).build();
-        }
         return ResponseEntity.ok(response);
 
     }

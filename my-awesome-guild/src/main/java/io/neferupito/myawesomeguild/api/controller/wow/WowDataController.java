@@ -7,6 +7,7 @@ import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,9 +18,17 @@ public class WowDataController {
     @Autowired
     private WowDataService wowDataService;
 
-    @GetMapping("/realms")
-    public ResponseEntity<Response<List<Realm>>> getAllRealms() {
-        return ResponseEntity.ok(wowDataService.getAllRealms(Region.EU));
+    @GetMapping("/regions")
+    public ResponseEntity<Response<List<Region>>> getAllRegions() {
+        return ResponseEntity.ok(wowDataService.getAllRegions());
+    }
+
+    @GetMapping("/{region}/realms")
+    public ResponseEntity<Response<List<Realm>>> getAllRealmsByRegion(
+            @PathVariable
+                    String region
+    ) {
+        return ResponseEntity.ok(wowDataService.getAllRealms(region));
     }
 
 }

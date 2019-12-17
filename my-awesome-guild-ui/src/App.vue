@@ -1,48 +1,99 @@
 <template>
     <div id="app">
-        <button @click="generateData">Generate WOW data</button>
-        <NewUser />
-        <ImportWowCharacter />
+        <Error />
 
-        <div>
-            <p v-show="existingRules.length" v-for="rule in existingRules" v-bind:key="rule.id"><a @click="set(rule)">{{rule}}</a>
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 50%">
+                    <button @click="setScope('new_user')">Sign up</button>
+                    <button @click="setScope('import_char')">Import WoW character</button>
+                    <button @click="setScope('mng_chars')">Manage WoW characters</button>
+                </td>
+                <td style="width: 50%; text-align: right"><select name="region" v-model="selectedRegion"
+                                                                  @change="notifyChangeRegion">
+                    <option disabled value="">Choisissez</option>
+                    <option v-bind:value="region" v-for="region in regions" v-bind:key="region">{{region}}</option>
+                </select>
 
-        </div>
+                    <select name="user" v-model="selectedUser">
+                        <option disabled value="">Choisissez</option>
+                        <option v-bind:value="user" v-for="user in users" v-bind:key="user.id">{{user.email}}</option>
+                    </select></td>
+            </tr>
+        </table>
+        <br />
+        <hr />
+        <br />
+        <NewUser v-if="scope === 'new_user'" />
+        <ImportWowCharacter v-if="scope === 'import_char'" :user=selectedUser :base-region=selectedRegion />
+        <CharactersManager v-if="scope === 'mng_chars'" :user=selectedUser />
+
+        <!--        <button @click="generateData">Generate WOW data</button>-->
 
     </div>
 </template>
 
 <script>
+    import Error from './components/Error.vue'
     import NewUser from './components/NewUser.vue'
     import ImportWowCharacter from './components/ImportWowCharacter.vue'
+    import CharactersManager from './components/CharactersManager.vue'
     import axios from 'axios';
+    import EventBus from './event-bus';
 
     export default {
         name: 'app',
         components: {
+            Error,
             NewUser,
-            ImportWowCharacter
+            ImportWowCharacter,
+            CharactersManager
         },
         data() {
             return {
-                characters: null
+                scope: null,
+                users: null,
+                regions: null,
+                selectedUser: null,
+                selectedRegion: null
             }
         },
         methods: {
             generateData() {
                 axios
                     .get('http://localhost:8080/data/gen')
-                // .then(response => {
-                //     this.realms = response.data.content;
-                // })
+                    .then(response => {
+                        if (response.status === 200) {
+                            this.isOK = true;
+                            this.getUsers();
+                            this.getRegions();
+                        }
+                    });
             },
-            getCharacters() {
+            setScope(scope) {
+                this.scope = scope;
+            },
+            getUsers() {
                 axios
-                    .get('http://localhost:8080/data/gen')
-                // .then(response => {
-                //     this.realms = response.data.content;
-                // })
-            }
+                    .get('http://localhost:8080/users')
+                    .then(response => {
+                        this.users = response.data.content;
+                    })
+            },
+            getRegions() {
+                axios
+                    .get('http://localhost:8080/regions')
+                    .then(response => {
+                        this.regions = response.data.content;
+                    })
+            },
+            notifyChangeRegion() {
+                EventBus.$emit('NEW_REGION', this.selectedRegion);
+            },
+        },
+        mounted() {
+            this.getUsers();
+            this.getRegions();
         }
     }
 </script>

@@ -1,6 +1,7 @@
 package io.neferupito.myawesomeguild.core.blizzard.client;
 
 import com.google.gson.Gson;
+import io.neferupito.myawesomeguild.core.blizzard.client.exception.BlizzardException;
 import io.neferupito.myawesomeguild.core.blizzard.json.RaceBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.RealmBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.SpecializationBlz;
@@ -41,10 +42,6 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     private UserRepository userRepository;
 
     public void importAllData() {
-        userRepository.save(User.builder()
-                .email("a@a.a")
-                .build());
-
         importRaces();
         importSpecs();
         for (Specialization spec :
@@ -78,7 +75,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .slug(rlm.getSlug())
                         .build());
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | BlizzardException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -103,7 +100,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .name(rc.getName())
                         .build());
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | BlizzardException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -127,7 +124,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .name(spec.getName())
                         .build());
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | BlizzardException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -154,7 +151,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
             spec.setRole(Role.valueOf(specializationDetailsBlz.getRole().getType()));
 
             specializationRepository.save(spec);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | BlizzardException e) {
             log.error("erreur call Bnet", e);
         }
     }

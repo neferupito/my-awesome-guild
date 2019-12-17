@@ -3,3 +3,7 @@ html {
     color: white;
     font-family: sans-serif;
 }
+
+.error {
+    background-color: #4e1012;
+}
