@@ -5,8 +5,8 @@
         <button @click="createUser">CREATE</button>
         <br />
         <br />
-        <div style="border: 1px solid black">
-            <p v-show="users.length" v-for="user in users" v-bind:key="user.id">xxx {{user.email}}</p>
+        <div v-if="users.length" style="border: 1px solid black">
+            <p v-for="user in users" v-bind:key="user.id">x {{user.email}}</p>
         </div>
 
     </div>
@@ -14,6 +14,7 @@
 
 <script>
     import axios from 'axios';
+    import EventBus from "../event-bus";
 
     export default {
         name: 'NewUser',
@@ -28,8 +29,13 @@
             getUsers() {
                 axios
                     .get('http://localhost:8080/users')
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        this.users = response.data.content;
+                        if (response != null) {
+                            this.users = response.data;
+                        }
                     })
             },
             createUser() {
@@ -42,12 +48,14 @@
                     "}";
                 axios
                     .post('http://localhost:8080/user', json, {headers: headers})
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        this.createdUser = response.data;
-                        // if (response.status === 200) {
-                        //     this.loadExistingGraphics();
-                        // }
-                        this.getUsers();
+                        if (response != null) {
+                            this.createdUser = response.data;
+                            this.getUsers();
+                        }
                     });
             }
         },

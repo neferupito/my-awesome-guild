@@ -1,5 +1,6 @@
 package io.neferupito.myawesomeguild.data.domain.wow.character;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.neferupito.myawesomeguild.data.domain.user.User;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -34,10 +36,13 @@ public class WowCharacter {
     private WowClass wowClass;
     @ManyToOne
     private Specialization mainSpec;
-    @OneToOne
+    @OneToOne(mappedBy = "wowCharacter")
     private Membership membership;
     @ManyToOne
-    @JoinColumn()
+    @JoinColumn
     private User user;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", locale = "fr_FR", timezone = "Europe/Paris")
+    private Date lastUpdate;
+    private String avatarUrl;
 
 }

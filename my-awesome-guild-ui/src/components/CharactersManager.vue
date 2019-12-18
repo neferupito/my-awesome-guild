@@ -1,11 +1,9 @@
 <template>
     <div>
-        <div v-show="characters.length" style="border: 1px solid black">
-            <p v-for="char in characters" v-bind:key="char.id">xxx {{char.name}}
+        <div v-if="characters !== null && characters.length" style="border: 1px solid black">
+            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" /> {{char.name}} {{char.lastUpdate}}
                 <button @click="refreshCharacter(char.id)">REFRESH</button>
                 <button @click="deleteCharacter(char.id)">DELETE</button>
-                <!--                <span-->
-                <!--                    v-show="char.user != null">{{char.user.email}}</span>-->
             </p>
         </div>
 
@@ -15,15 +13,15 @@
 <script>
     import axios from 'axios';
     import EventBus from "../event-bus";
-    // import EventBus from '../event-bus';
 
     export default {
         name: 'CharactersManager',
         props: {
-            user: null
+            baseUser: null
         },
         data: function () {
             return {
+                user: null,
                 characters: null
             };
         },
@@ -31,33 +29,47 @@
             getCharacters() {
                 axios
                     .get('http://localhost:8080/characters?userEmail=' + this.user.email)
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        this.characters = response.data;
+                        if (response != null) {
+                            this.characters = response.data;
+                        }
                     })
             },
             refreshCharacter(id) {
                 axios
-                    .get('http://localhost:8080/refresh-character?wowCharacterId=' + id)
+                    .put('http://localhost:8080/wow-character/' + id)
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        if (response.status != 200) {
-                            EventBus.$emit('SHOW_ERROR_MESSAGE', "REFRESH RATE");
+                        if (response != null) {
+                            this.getCharacters();
                         }
-                        this.getCharacters();
                     });
             },
             deleteCharacter(id) {
                 axios
-                    .get('http://localhost:8080/delete-character?wowCharacterId=' + id)
+                    .delete('http://localhost:8080/wow-character/' + id)
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        if (response.status != 200) {
-                            EventBus.$emit('SHOW_ERROR_MESSAGE', "DELETE RATE");
+                        if (response != null) {
+                            this.getCharacters();
                         }
-                        this.getCharacters();
                     });
             }
         },
         mounted() {
+            this.user = this.baseUser;
             this.getCharacters();
+            EventBus.$on('NEW_USER', (user) => {
+                this.user = user;
+                this.getCharacters();
+            });
         }
 
     }

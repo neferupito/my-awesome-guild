@@ -24,25 +24,21 @@ public class DataController {
     private ConstantDataImportBlizzardClient client;
 
     @Autowired
-    RaceRepository raceRepository;
-    @Autowired
-    SpecializationRepository specializationRepository;
-    @Autowired
     RealmRepository realmRepository;
     @Autowired
     UserRepository userRepository;
 
     @GetMapping("/data/gen")
-    public ResponseEntity generate() {
+    public ResponseEntity<Object> generate() {
         List<Realm> r = realmRepository.findByRegion(Region.EU);
         if (r == null || r.isEmpty()) {
             client.importAllData();
             User user1 = User.builder()
-                    .email("nef@aaa.com")
+                    .email("nefee")
                     .build();
             user1 = userRepository.save(user1);
             User user2 = User.builder()
-                    .email("kir@aaa.com")
+                    .email("kirri")
                     .build();
             user2 = userRepository.save(user2);
         }

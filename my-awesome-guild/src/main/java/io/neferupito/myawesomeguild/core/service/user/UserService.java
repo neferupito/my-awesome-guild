@@ -1,13 +1,11 @@
 package io.neferupito.myawesomeguild.core.service.user;
 
-import io.neferupito.myawesomeguild.api.Response;
+import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.data.domain.user.User;
 import io.neferupito.myawesomeguild.data.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -15,39 +13,21 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Response<User> createNewUser(User user) {
-        Response response;
+    public User createNewUser(User user) throws AwesomeException {
         try {
-            response = Response.<User>builder()
-                    .content(userRepository.save(user))
-                    .isError(false)
-                    .build();
+            return userRepository.save(user);
         } catch (Exception e) {
-            e.printStackTrace();
-            response = Response.builder()
-                    .isError(true)
-                    .errorHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .build();
+            throw new AwesomeException(HttpStatus.BAD_REQUEST, "Erreur lors de l'enregistrement du nouvel utilisateur " + e.getClass());
         }
-        return response;
     }
 
-    public Response<Iterable<User>> findAllUsers() {
-        Response response;
+    public Iterable<User> findAllUsers() throws AwesomeException {
         try {
-            response = Response.<Iterable<User>>builder()
-                    .content(userRepository.findAll())
-                    .isError(false)
-                    .build();
+            return userRepository.findAll();
+
         } catch (Exception e) {
-//            DataIntegrityViolationException
-            e.printStackTrace();
-            response = Response.builder()
-                    .isError(true)
-                    .errorHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .build();
+            throw new AwesomeException(HttpStatus.BAD_REQUEST, "Erreur lors de l'appel de tous les utilisateurs " + e.getClass());
         }
-        return response;
     }
 
 }

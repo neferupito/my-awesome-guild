@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-show="message != null"  class="error">{{message}}
+        <div v-if="message != null"  class="error">{{message}}
             <button @click="eraseMessage">OK</button>
             <br />
             <br />

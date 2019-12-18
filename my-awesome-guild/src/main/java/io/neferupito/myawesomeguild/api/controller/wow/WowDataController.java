@@ -1,6 +1,6 @@
 package io.neferupito.myawesomeguild.api.controller.wow;
 
-import io.neferupito.myawesomeguild.api.Response;
+import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.service.wow.WowDataService;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
@@ -19,16 +19,20 @@ public class WowDataController {
     private WowDataService wowDataService;
 
     @GetMapping("/regions")
-    public ResponseEntity<Response<List<Region>>> getAllRegions() {
+    public ResponseEntity<List<Region>> getAllRegions() {
         return ResponseEntity.ok(wowDataService.getAllRegions());
     }
 
     @GetMapping("/{region}/realms")
-    public ResponseEntity<Response<List<Realm>>> getAllRealmsByRegion(
+    public ResponseEntity<Object> getAllRealmsByRegion(
             @PathVariable
                     String region
     ) {
-        return ResponseEntity.ok(wowDataService.getAllRealms(region));
+        try {
+            return ResponseEntity.ok(wowDataService.getAllRealms(region));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
     }
 
 }

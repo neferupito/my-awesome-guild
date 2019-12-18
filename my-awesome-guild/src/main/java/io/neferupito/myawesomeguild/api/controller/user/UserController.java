@@ -1,14 +1,15 @@
 package io.neferupito.myawesomeguild.api.controller.user;
 
-import io.neferupito.myawesomeguild.api.Response;
+import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.service.user.UserService;
 import io.neferupito.myawesomeguild.data.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -19,21 +20,24 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/user")
-    public ResponseEntity<Response<User>> createNewUser(
+    public ResponseEntity createNewUser(
 //            @Valid
             @RequestBody
                     User user) {
-        System.err.println("USER RECEIVED\n"+user.toString());
-        Response response = userService.createNewUser(user);
-        return ResponseEntity.ok(response);
-
+        try {
+            return ResponseEntity.ok(userService.createNewUser(user));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Response<Iterable<User>>> findAllUsers() {
-        Response response = userService.findAllUsers();
-        return ResponseEntity.ok(response);
-
+    public ResponseEntity findAllUsers() {
+        try {
+            return ResponseEntity.ok(userService.findAllUsers());
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
     }
 
 }

@@ -6,21 +6,19 @@
         </select>
         <input v-model="characterName" placeholder="Nom du personnage">
         <button @click="importCharacter">FIND</button>
-        <span v-if="foundCharacter !== null">{{foundCharacter.name}} {{foundCharacter.level}} {{foundCharacter.wowClass.name}}</span>
+        <span v-if="foundCharacter !== null">{{foundCharacter.name}} {{foundCharacter.level}} {{foundCharacter.wowClass.name}} <span
+                v-if="foundCharacter.user !== null">{{foundCharacter.user.email}}</span></span>
         <p v-if="foundCharacter !== null">
             <button @click="linkCharacter">LINK</button>
         </p>
 
-        <p v-show="isError">{{errorStatus}} {{errorMessage}}</p>
-
         <br />
         <br />
 
-        <div v-show="characters.length" style="border: 1px solid black">
-            <p  v-for="char in characters" v-bind:key="char.id">xxx {{char.name}}
-                <!--                <span-->
-                <!--                    v-show="char.user != null">{{char.user.email}}</span>-->
-            </p>
+        <div v-if="characters !== null && characters.length" style="border: 1px solid black">
+            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" />
+                {{char.name}}
+                {{char.lastUpdate}}</p>
         </div>
 
     </div>
@@ -33,18 +31,16 @@
     export default {
         name: 'ImportWowCharacter',
         props: {
-            user: null,
+            baseUser: null,
             baseRegion: null
         },
         data: function () {
             return {
+                user: null,
                 region: null,
                 realms: Array,
                 selectedRealm: null,
                 characterName: null,
-                isError: false,
-                errorStatus: null,
-                errorMessage: null,
                 foundCharacter: null,
                 characters: null
             };
@@ -53,45 +49,37 @@
             getRealms() {
                 axios
                     .get('http://localhost:8080/' + this.region + '/realms')
+                    .catch(error => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', error.response.data);
+                    })
                     .then(response => {
-                        this.realms = response.data.content;
+                        if (response != null) {
+                            this.realms = response.data;
+                        }
                     })
             },
             importCharacter() {
                 axios
-                    .get('http://localhost:8080/find-character?region=' + this.region + '&slugRealm=' + this.selectedRealm.slug + '&name=' + this.characterName + '&userEmail=' + this.user.email)
+                    .get('http://localhost:8080/wow-character-import?region=' + this.region + '&slugRealm=' + this.selectedRealm.slug + '&name=' + this.characterName + '&userEmail=' + this.user.email)
+                    .catch(error => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', error.response.data);
+                    })
                     .then(response => {
-                        // eslint-disable-next-line no-console
-                        console.debug(response.data);
-                        if (response.data.error) {
-                            this.isError = true;
-                            EventBus.$emit('SHOW_ERROR_MESSAGE', response.data.externalHttpMessage);
-                            // this.errorStatus = response.data.externalHttpStatus;
-                            // this.errorMessage = response.data.externalHttpMessage;
-                        } else {
-                            this.isError = false;
-                            this.errorStatus = null;
-                            this.errorMessage = null;
-                            this.foundCharacter = response.data.content;
+                        if (response != null) {
+                            this.foundCharacter = response.data;
                         }
                     });
             },
             linkCharacter() {
                 axios
-                    .get('http://localhost:8080/link-character?wowCharacterId=' + this.foundCharacter.id + '&userEmail=' + this.user.email)
+                    .get('http://localhost:8080/wow-character/' + this.foundCharacter.id + '/link?userEmail=' + this.user.email)
+                    .catch(error => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', error.response.data);
+                    })
                     .then(response => {
-                        // eslint-disable-next-line no-console
-                        console.debug(response.data);
-                        if (response.data.error) {
-                            EventBus.$emit('SHOW_ERROR_MESSAGE', response.data.externalHttpMessage);
-                            this.isError = true;
-                            // this.errorStatus = response.data.externalHttpStatus;
-                            // this.errorMessage = response.data.externalHttpMessage;
-                        } else {
-                            this.isError = false;
-                            this.errorStatus = null;
-                            this.errorMessage = null;
+                        if (response != null) {
                             this.foundCharacter = null;
+                            this.characterName = null;
                             this.getCharacters();
                         }
                     });
@@ -99,18 +87,28 @@
             getCharacters() {
                 axios
                     .get('http://localhost:8080/characters?userEmail=' + this.user.email)
+                    .catch(reason => {
+                        EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
+                    })
                     .then(response => {
-                        this.characters = response.data;
+                        if (response != null) {
+                            this.characters = response.data;
+                        }
                     })
             }
         },
         mounted() {
             this.region = this.baseRegion;
+            this.user = this.baseUser;
             this.getRealms();
             this.getCharacters();
             EventBus.$on('NEW_REGION', (region) => {
                 this.region = region;
                 this.getRealms();
+            });
+            EventBus.$on('NEW_USER', (user) => {
+                this.user = user;
+                this.getCharacters();
             });
         }
 

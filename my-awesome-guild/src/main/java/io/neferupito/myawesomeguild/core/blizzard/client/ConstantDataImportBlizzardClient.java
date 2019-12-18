@@ -1,12 +1,11 @@
 package io.neferupito.myawesomeguild.core.blizzard.client;
 
 import com.google.gson.Gson;
-import io.neferupito.myawesomeguild.core.blizzard.client.exception.BlizzardException;
+import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.blizzard.json.RaceBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.RealmBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.SpecializationBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.SpecializationDetailsBlz;
-import io.neferupito.myawesomeguild.data.domain.user.User;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Race;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Role;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Specialization;
@@ -14,7 +13,6 @@ import io.neferupito.myawesomeguild.data.domain.wow.character.WowClass;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
-import io.neferupito.myawesomeguild.data.repository.user.UserRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.RaceRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.RealmRepository;
 import io.neferupito.myawesomeguild.data.repository.wow.SpecializationRepository;
@@ -38,8 +36,6 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
     private WowClassRepository wowClassRepository;
     @Autowired
     private SpecializationRepository specializationRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public void importAllData() {
         importRaces();
@@ -75,7 +71,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .slug(rlm.getSlug())
                         .build());
             }
-        } catch (URISyntaxException | BlizzardException e) {
+        } catch (URISyntaxException | AwesomeException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -100,7 +96,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .name(rc.getName())
                         .build());
             }
-        } catch (URISyntaxException | BlizzardException e) {
+        } catch (URISyntaxException | AwesomeException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -124,7 +120,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
                         .name(spec.getName())
                         .build());
             }
-        } catch (URISyntaxException | BlizzardException e) {
+        } catch (URISyntaxException | AwesomeException e) {
             log.error("erreur call Bnet", e);
         }
     }
@@ -151,7 +147,7 @@ public class ConstantDataImportBlizzardClient extends BlizzardClient {
             spec.setRole(Role.valueOf(specializationDetailsBlz.getRole().getType()));
 
             specializationRepository.save(spec);
-        } catch (URISyntaxException | BlizzardException e) {
+        } catch (URISyntaxException | AwesomeException e) {
             log.error("erreur call Bnet", e);
         }
     }

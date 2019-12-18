@@ -6,8 +6,10 @@
             <tr>
                 <td style="width: 50%">
                     <button @click="setScope('new_user')">Sign up</button>
-                    <button @click="setScope('import_char')">Import WoW character</button>
-                    <button @click="setScope('mng_chars')">Manage WoW characters</button>
+                    <button v-if="selectedUser !== null && selectedRegion !== null" @click="setScope('import_char')">Import WoW character</button>
+                    <button v-else disabled>Import WoW character</button>
+                    <button v-if="selectedUser !== null" @click="setScope('mng_chars')">Manage WoW characters</button>
+                    <button v-else disabled>Manage WoW characters</button>
                 </td>
                 <td style="width: 50%; text-align: right"><select name="region" v-model="selectedRegion"
                                                                   @change="notifyChangeRegion">
@@ -15,7 +17,7 @@
                     <option v-bind:value="region" v-for="region in regions" v-bind:key="region">{{region}}</option>
                 </select>
 
-                    <select name="user" v-model="selectedUser">
+                    <select name="user" v-model="selectedUser" @change="notifyChangeUser">
                         <option disabled value="">Choisissez</option>
                         <option v-bind:value="user" v-for="user in users" v-bind:key="user.id">{{user.email}}</option>
                     </select></td>
@@ -25,8 +27,8 @@
         <hr />
         <br />
         <NewUser v-if="scope === 'new_user'" />
-        <ImportWowCharacter v-if="scope === 'import_char'" :user=selectedUser :base-region=selectedRegion />
-        <CharactersManager v-if="scope === 'mng_chars'" :user=selectedUser />
+        <ImportWowCharacter v-if="scope === 'import_char'" :base-user=selectedUser :base-region=selectedRegion />
+        <CharactersManager v-if="scope === 'mng_chars'" :base-user=selectedUser />
 
         <!--        <button @click="generateData">Generate WOW data</button>-->
 
@@ -64,7 +66,6 @@
                     .get('http://localhost:8080/data/gen')
                     .then(response => {
                         if (response.status === 200) {
-                            this.isOK = true;
                             this.getUsers();
                             this.getRegions();
                         }
@@ -77,19 +78,30 @@
                 axios
                     .get('http://localhost:8080/users')
                     .then(response => {
-                        this.users = response.data.content;
+                        if (response.status !== 200) {
+                            EventBus.$emit('SHOW_ERROR_MESSAGE', response.data);
+                        } else {
+                            this.users = response.data;
+                        }
                     })
             },
             getRegions() {
                 axios
                     .get('http://localhost:8080/regions')
                     .then(response => {
-                        this.regions = response.data.content;
+                        if (response.status !== 200) {
+                            EventBus.$emit('SHOW_ERROR_MESSAGE', response.data);
+                        } else {
+                            this.regions = response.data;
+                        }
                     })
             },
             notifyChangeRegion() {
                 EventBus.$emit('NEW_REGION', this.selectedRegion);
             },
+            notifyChangeUser() {
+                EventBus.$emit('NEW_USER', this.selectedUser);
+            }
         },
         mounted() {
             this.getUsers();
