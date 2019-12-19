@@ -3,6 +3,7 @@ package io.neferupito.myawesomeguild.core.blizzard.client;
 import com.google.gson.Gson;
 import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.blizzard.json.GuildBlz;
+import io.neferupito.myawesomeguild.core.blizzard.json.RosterBlz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,36 @@ public class GuildBlizzardClient extends BlizzardClient {
         try {
             String response = invokeBlizzardApi(new URI(url));
             return new Gson().fromJson(response, GuildBlz.class);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            log.error("erreur call Bnet", e);
+        }
+        return null;
+    }
+
+    public RosterBlz importRosterByUrl(String url) throws AwesomeException {
+        try {
+            String response = invokeBlizzardApi(new URI(url));
+            return new Gson().fromJson(response, RosterBlz.class);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            log.error("erreur call Bnet", e);
+        }
+        return null;
+    }
+
+    public RosterBlz importRoster(String region, String slugRealm, String slugName) throws AwesomeException {
+//        https://eu.api.blizzard.com/data/wow/guild/hyjal/spooky-scary-skeletons/roster?namespace=profile-eu&locale=fr_FR&access_token=EUmZEjB7Z8prKBQhIqjpCZj9z4nDW62tZ1
+        try {
+            String path = "/data/wow/guild/" + slugRealm.toLowerCase() + "/" + slugName + "/roster";
+            URI uri = new URI(
+                    getScheme(),
+                    region.toLowerCase() + getAuthority(),
+                    path,
+                    getLocale() + "&" + "namespace=profile-" + region.toLowerCase(),
+                    null);
+            String response = invokeBlizzardApi(uri);
+            return new Gson().fromJson(response, RosterBlz.class);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             log.error("erreur call Bnet", e);

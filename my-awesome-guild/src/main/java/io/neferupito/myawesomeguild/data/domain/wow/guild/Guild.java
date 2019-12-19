@@ -20,7 +20,6 @@ import java.util.Date;
 public class Guild {
 
     @Id
-    @GeneratedValue
     private Long id;
     @ManyToOne
     private Realm realm;

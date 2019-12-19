@@ -21,11 +21,12 @@ public class Membership {
     private Long id;
 
     @OneToOne
-    @JoinColumn
+//    @JoinColumn
     private WowCharacter wowCharacter;
 
-    @ManyToOne
-    @JoinColumn
+//    @ManyToOne
+    @OneToOne
+//    @JoinColumn
     private Guild guild;
 
     private Integer rank;

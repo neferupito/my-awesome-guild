@@ -38,6 +38,8 @@ public class WowCharacterService {
     private SpecializationRepository specializationRepository;
     @Autowired
     private CharacterBlizzardClient blizzardClient;
+    @Autowired
+    private WowGuildService wowGuildService;
 
     public WowCharacter findWowCharacterById(Long wowCharacterId) throws AwesomeException {
         Optional<WowCharacter> wowCharacterOpt = wowCharacterRepository.findById(wowCharacterId);
@@ -53,6 +55,17 @@ public class WowCharacterService {
         if (existingCharacter.isPresent()) {
             return existingCharacter.get();
         }
+        if (wowCharacterBlz.getGuild() != null) {
+            Thread thread = new Thread(() -> {
+                try {
+                    wowGuildService.importNewWowGuild(region, wowCharacterBlz);
+                } catch (AwesomeException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
+        }
+
         WowCharacter character = transformWowCharacter(Region.valueOf(region), wowCharacterBlz);
         character.setAvatarUrl(blizzardClient.importCharacterMedia(region, slugRealm, name).getAvatarURL());
 
