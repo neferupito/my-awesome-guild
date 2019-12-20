@@ -24,8 +24,8 @@ public class Membership {
 //    @JoinColumn
     private WowCharacter wowCharacter;
 
-//    @ManyToOne
-    @OneToOne
+    @ManyToOne
+//    @OneToOne
 //    @JoinColumn
     private Guild guild;
 

@@ -1,5 +1,7 @@
 <template>
     <div>
+        user = {{baseUser}}
+        region = {{baseRegion}}
         <select name="realm" v-model="selectedRealm">
             <option disabled value="">Choisissez</option>
             <option v-bind:value="realm" v-for="realm in realms" v-bind:key="realm.id">{{realm.name}}</option>
@@ -17,8 +19,14 @@
 
         <div v-if="characters !== null && characters.length" style="border: 1px solid black">
             <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" />
-                {{char.name}}
-                {{char.lastUpdate}}</p>
+<!--                <router-link to="/character/{{char.id}}">fdsfdsghdfhd</router-link>-->
+<!--                <a v-bind:href="'/job/'+ r.id">-->
+<!--                    or-->
+                <router-link :to="'/character/'+char.id">character mngr</router-link>
+<!--                    <a :href="'/character/' + char.id">-->
+                        {{char.name}}
+                {{char.lastUpdate}}
+            </p>
         </div>
 
     </div>
@@ -102,6 +110,8 @@
             this.user = this.baseUser;
             this.getRealms();
             this.getCharacters();
+        },
+        created() {
             EventBus.$on('NEW_REGION', (region) => {
                 this.region = region;
                 this.getRealms();
@@ -111,6 +121,5 @@
                 this.getCharacters();
             });
         }
-
     }
 </script>

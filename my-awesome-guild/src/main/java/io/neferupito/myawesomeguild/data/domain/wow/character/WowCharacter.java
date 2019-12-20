@@ -2,7 +2,6 @@ package io.neferupito.myawesomeguild.data.domain.wow.character;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.neferupito.myawesomeguild.data.domain.user.User;
-import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
@@ -28,18 +27,18 @@ public class WowCharacter {
     @ManyToOne
     private Race race;
     private Integer level;
+    @Enumerated(EnumType.STRING)
     private Region region;
     @ManyToOne
     private Realm realm;
+    @Enumerated(EnumType.STRING)
     private Faction faction;
     @ManyToOne
     private WowClass wowClass;
     @ManyToOne
     private Specialization mainSpec;
-    @OneToOne(mappedBy = "wowCharacter")
-    private Membership membership;
     @ManyToOne
-    @JoinColumn
+//    @JoinColumn
     private User user;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", locale = "fr_FR", timezone = "Europe/Paris")
     private Date lastUpdate;

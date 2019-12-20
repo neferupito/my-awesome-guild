@@ -55,6 +55,7 @@
                         if (response != null) {
                             this.createdUser = response.data;
                             this.getUsers();
+                            EventBus.$emit('REFRESH_USERS');
                         }
                     });
             }

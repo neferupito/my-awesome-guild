@@ -44,6 +44,18 @@ public class WowCharacterController {
         }
     }
 
+    @GetMapping("/wow-character/{wowCharacterId}")
+    public ResponseEntity<Object> getWowCharacter(
+            @PathVariable
+                    Long wowCharacterId
+    ) {
+        try {
+            return ResponseEntity.ok(wowCharacterService.findWowCharacterById(wowCharacterId));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
+    }
+
     @PutMapping("/wow-character/{wowCharacterId}")
     public ResponseEntity<Object> refreshWowCharacter(
             @PathVariable

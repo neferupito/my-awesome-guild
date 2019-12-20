@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -19,6 +17,7 @@ public class Realm implements Comparable<Realm> {
 
     @Id
     private Integer id;
+    @Enumerated(EnumType.STRING)
     private Region region;
     private String name;
     private String slug;

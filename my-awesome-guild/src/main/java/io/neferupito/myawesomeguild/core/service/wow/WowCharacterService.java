@@ -55,18 +55,23 @@ public class WowCharacterService {
         if (existingCharacter.isPresent()) {
             return existingCharacter.get();
         }
+
         if (wowCharacterBlz.getGuild() != null) {
             Thread thread = new Thread(() -> {
                 try {
-                    wowGuildService.importNewWowGuild(region, wowCharacterBlz);
+                    wowGuildService.findGuildById(wowCharacterBlz.getGuild().getId());
                 } catch (AwesomeException e) {
-                    e.printStackTrace();
+                    try {
+                        wowGuildService.importNewWowGuildByUrl(wowCharacterBlz.getGuild().getKey().getHref());
+                    } catch (AwesomeException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             thread.start();
         }
 
-        WowCharacter character = transformWowCharacter(Region.valueOf(region), wowCharacterBlz);
+        WowCharacter character = transformWowCharacter(Region.findValue(region), wowCharacterBlz);
         character.setAvatarUrl(blizzardClient.importCharacterMedia(region, slugRealm, name).getAvatarURL());
 
         try {
@@ -99,6 +104,7 @@ public class WowCharacterService {
         WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
         User user = wowCharacter.getUser();
         WowCharacterBlz wowCharacterBlz = blizzardClient.importCharacter(wowCharacter.getRegion().name(), wowCharacter.getRealm().getSlug(), wowCharacter.getName());
+        wowGuildService.refreshWowCharacterMembership(wowCharacter, wowCharacterBlz);
         wowCharacter = transformWowCharacter(wowCharacter.getRegion(), wowCharacterBlz);
         wowCharacter.setUser(user);
         wowCharacter.setLastUpdate(new Date());

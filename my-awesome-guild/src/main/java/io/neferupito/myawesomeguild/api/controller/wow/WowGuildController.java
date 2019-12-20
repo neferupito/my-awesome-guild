@@ -4,9 +4,7 @@ import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.service.wow.WowGuildService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class WowGuildController {
@@ -30,10 +28,34 @@ public class WowGuildController {
         }
     }
 
+    @GetMapping("/wow-guild/{guildId}")
+    public ResponseEntity<Object> getGuildById(
+            @PathVariable
+                    Long guildId) {
+        try {
+            return ResponseEntity.ok(wowGuildService.findGuildById(guildId));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
+    }
+
     @GetMapping("/wow-guild/{guildId}/roster")
-    public ResponseEntity<Object> getRoster(Long guildId) {
+    public ResponseEntity<Object> getRoster(
+            @PathVariable
+                    Long guildId) {
         try {
             return ResponseEntity.ok(wowGuildService.findAllMembersFromGuild(guildId));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
+    }
+
+    @PutMapping("/wow-guild/{guildId}/roster/refresh")
+    public ResponseEntity<Object> refreshRoster(
+            @PathVariable
+                    Long guildId) {
+        try {
+            return ResponseEntity.ok(wowGuildService.refreshRoster(guildId));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }

@@ -20,6 +20,7 @@ public class Specialization {
     private String name;
     @ManyToOne
     private WowClass wowClass;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
 }

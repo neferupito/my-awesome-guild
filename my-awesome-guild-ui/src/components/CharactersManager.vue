@@ -1,7 +1,8 @@
 <template>
     <div>
         <div v-if="characters !== null && characters.length" style="border: 1px solid black">
-            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" /> {{char.name}} {{char.lastUpdate}}
+            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" />
+                {{char.name}} {{char.lastUpdate}}
                 <button @click="refreshCharacter(char.id)">REFRESH</button>
                 <button @click="deleteCharacter(char.id)">DELETE</button>
             </p>
@@ -66,11 +67,12 @@
         mounted() {
             this.user = this.baseUser;
             this.getCharacters();
+        },
+        created() {
             EventBus.$on('NEW_USER', (user) => {
                 this.user = user;
                 this.getCharacters();
             });
         }
-
     }
 </script>

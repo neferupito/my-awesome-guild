@@ -27,7 +27,7 @@ public class WowDataService {
     public List<Realm> getAllRealms(String regionString) throws AwesomeException {
         Region region;
         try {
-            region = Region.valueOf(regionString.toUpperCase());
+            region = Region.findValue(regionString);
         } catch (Exception e) {
             throw new AwesomeException(HttpStatus.BAD_REQUEST, "Region " + regionString + " non reconnue");
         }
