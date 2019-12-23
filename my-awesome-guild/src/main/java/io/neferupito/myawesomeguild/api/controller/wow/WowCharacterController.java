@@ -3,6 +3,7 @@ package io.neferupito.myawesomeguild.api.controller.wow;
 
 import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.service.wow.WowCharacterService;
+import io.neferupito.myawesomeguild.core.service.wow.WowGuildService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ public class WowCharacterController {
 
     @Autowired
     private WowCharacterService wowCharacterService;
+    @Autowired
+    private WowGuildService wowGuildService;
 
     @GetMapping("/wow-character-import")
     public ResponseEntity<Object> importCharacter(
@@ -44,6 +47,18 @@ public class WowCharacterController {
         }
     }
 
+    @GetMapping("/wow-character/{wowCharacterId}/guild")
+    public ResponseEntity<Object> getCharacterMembership(
+            @PathVariable
+                    Long wowCharacterId
+    ) {
+        try {
+            return ResponseEntity.ok(wowGuildService.findMembershipByWowCharacterId(wowCharacterId));
+        } catch (AwesomeException e) {
+            return e.buildResponseEntity();
+        }
+    }
+
     @GetMapping("/wow-character/{wowCharacterId}")
     public ResponseEntity<Object> getWowCharacter(
             @PathVariable
@@ -68,13 +83,16 @@ public class WowCharacterController {
         }
     }
 
-    @DeleteMapping("/wow-character/{wowCharacterId}")
+    @DeleteMapping("/wow-character/{wowCharacterId}/link")
     public ResponseEntity<Object> deleteWowCharacter(
             @PathVariable
-                    Long wowCharacterId
+                    Long wowCharacterId,
+            @RequestParam
+                    String userEmail
     ) {
         try {
-            wowCharacterService.deleteWowCharacter(wowCharacterId);
+
+            wowCharacterService.deleteWowCharacterLink(wowCharacterId, userEmail);
             return ResponseEntity.ok().build();
         } catch (AwesomeException e) {
             return e.buildResponseEntity();

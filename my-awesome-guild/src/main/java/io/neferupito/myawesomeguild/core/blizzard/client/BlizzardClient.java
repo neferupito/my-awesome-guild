@@ -1,14 +1,11 @@
 package io.neferupito.myawesomeguild.core.blizzard.client;
 
-import com.google.gson.Gson;
 import io.neferupito.myawesomeguild.api.controller.AwesomeException;
-import io.neferupito.myawesomeguild.core.blizzard.json.TokenBlz;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

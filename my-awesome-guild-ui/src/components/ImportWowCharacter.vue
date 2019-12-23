@@ -1,15 +1,13 @@
 <template>
     <div>
-        user = {{baseUser}}
-        region = {{baseRegion}}
         <select name="realm" v-model="selectedRealm">
             <option disabled value="">Choisissez</option>
             <option v-bind:value="realm" v-for="realm in realms" v-bind:key="realm.id">{{realm.name}}</option>
         </select>
         <input v-model="characterName" placeholder="Nom du personnage">
         <button @click="importCharacter">FIND</button>
-        <span v-if="foundCharacter !== null">{{foundCharacter.name}} {{foundCharacter.level}} {{foundCharacter.wowClass.name}} <span
-                v-if="foundCharacter.user !== null">{{foundCharacter.user.email}}</span></span>
+        <span v-if="foundCharacter !== null"> <WowCharacterLine :character-id="foundCharacter.id" /> <span
+                v-if="foundCharacter.claimed">{{foundCharacter.user.email}}</span></span>
         <p v-if="foundCharacter !== null">
             <button @click="linkCharacter">LINK</button>
         </p>
@@ -17,15 +15,9 @@
         <br />
         <br />
 
-        <div v-if="characters !== null && characters.length" style="border: 1px solid black">
-            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" />
-<!--                <router-link to="/character/{{char.id}}">fdsfdsghdfhd</router-link>-->
-<!--                <a v-bind:href="'/job/'+ r.id">-->
-<!--                    or-->
-                <router-link :to="'/character/'+char.id">character mngr</router-link>
-<!--                    <a :href="'/character/' + char.id">-->
-                        {{char.name}}
-                {{char.lastUpdate}}
+        <div v-if="characters !== null && characters.length">
+            <p v-for="char in characters" v-bind:key="char.id">
+                <WowCharacterLine :character-id="char.id" />
             </p>
         </div>
 
@@ -35,16 +27,17 @@
 <script>
     import axios from 'axios';
     import EventBus from '../event-bus';
+    import WowCharacterLine from "./WowCharacterLine";
 
     export default {
         name: 'ImportWowCharacter',
+        components: {WowCharacterLine},
         props: {
-            baseUser: null,
+            user: null,
             baseRegion: null
         },
         data: function () {
             return {
-                user: null,
                 region: null,
                 realms: Array,
                 selectedRealm: null,
@@ -68,7 +61,7 @@
             },
             importCharacter() {
                 axios
-                    .get('http://localhost:8080/wow-character-import?region=' + this.region + '&slugRealm=' + this.selectedRealm.slug + '&name=' + this.characterName + '&userEmail=' + this.user.email)
+                    .get('http://localhost:8080/wow-character-import?region=' + this.region + '&slugRealm=' + this.selectedRealm.slug + '&name=' + this.characterName + '&userEmail=' + this.user)
                     .catch(error => {
                         EventBus.$emit('SHOW_ERROR_MESSAGE', error.response.data);
                     })
@@ -80,7 +73,7 @@
             },
             linkCharacter() {
                 axios
-                    .get('http://localhost:8080/wow-character/' + this.foundCharacter.id + '/link?userEmail=' + this.user.email)
+                    .get('http://localhost:8080/wow-character/' + this.foundCharacter.id + '/link?userEmail=' + this.user)
                     .catch(error => {
                         EventBus.$emit('SHOW_ERROR_MESSAGE', error.response.data);
                     })
@@ -94,7 +87,7 @@
             },
             getCharacters() {
                 axios
-                    .get('http://localhost:8080/characters?userEmail=' + this.user.email)
+                    .get('http://localhost:8080/characters?userEmail=' + this.user)
                     .catch(reason => {
                         EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
                     })
@@ -107,7 +100,6 @@
         },
         mounted() {
             this.region = this.baseRegion;
-            this.user = this.baseUser;
             this.getRealms();
             this.getCharacters();
         },
@@ -115,10 +107,6 @@
             EventBus.$on('NEW_REGION', (region) => {
                 this.region = region;
                 this.getRealms();
-            });
-            EventBus.$on('NEW_USER', (user) => {
-                this.user = user;
-                this.getCharacters();
             });
         }
     }

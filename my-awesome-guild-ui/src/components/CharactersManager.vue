@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div v-if="characters !== null && characters.length" style="border: 1px solid black">
-            <p v-for="char in characters" v-bind:key="char.id"><img :src="char.avatarUrl" width="50px" height="50px" />
-                {{char.name}} {{char.lastUpdate}}
+        <div v-if="characters !== null">
+            <p v-for="char in characters" v-bind:key="char.id">
+                <WowCharacterLine :character-id="char.id" />
                 <button @click="refreshCharacter(char.id)">REFRESH</button>
-                <button @click="deleteCharacter(char.id)">DELETE</button>
+                <button @click="deleteCharacterLink(char.id)">DELETE</button>
             </p>
         </div>
 
@@ -14,22 +14,23 @@
 <script>
     import axios from 'axios';
     import EventBus from "../event-bus";
+    import WowCharacterLine from "./WowCharacterLine";
 
     export default {
         name: 'CharactersManager',
+        components: {WowCharacterLine},
         props: {
-            baseUser: null
+            user: null
         },
         data: function () {
             return {
-                user: null,
                 characters: null
             };
         },
         methods: {
             getCharacters() {
                 axios
-                    .get('http://localhost:8080/characters?userEmail=' + this.user.email)
+                    .get('http://localhost:8080/characters?userEmail=' + this.user)
                     .catch(reason => {
                         EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
                     })
@@ -51,9 +52,9 @@
                         }
                     });
             },
-            deleteCharacter(id) {
+            deleteCharacterLink(id) {
                 axios
-                    .delete('http://localhost:8080/wow-character/' + id)
+                    .delete('http://localhost:8080/wow-character/' + id + '/link?userEmail=' + this.user)
                     .catch(reason => {
                         EventBus.$emit('SHOW_ERROR_MESSAGE', reason.response.data);
                     })
@@ -65,14 +66,7 @@
             }
         },
         mounted() {
-            this.user = this.baseUser;
             this.getCharacters();
-        },
-        created() {
-            EventBus.$on('NEW_USER', (user) => {
-                this.user = user;
-                this.getCharacters();
-            });
         }
     }
 </script>

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
@@ -14,18 +15,18 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Membership {
+public class GuildAuthConfig {
 
     @Id
-    @GeneratedValue
     private Long id;
 
-    @OneToOne
-    private WowCharacter wowCharacter;
-
-    @ManyToOne
+    @OneToOne(mappedBy = "authConfig")
     private Guild guild;
 
-    private Integer rank;
+    @OneToOne
+    private WowCharacter guildMaster;
+
+    @OneToMany
+    private List<WowCharacter> officers;
 
 }

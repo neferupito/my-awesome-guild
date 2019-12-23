@@ -1,14 +1,11 @@
 <template>
     <div>
-        <input id="email" v-model="email"
-               placeholder="email" />
-        <button @click="createUser">CREATE</button>
-        <br />
-        <br />
-        <div v-if="users.length" style="border: 1px solid black">
-            <p v-for="user in users" v-bind:key="user.id">x {{user.email}}</p>
-        </div>
-
+        <form class="form-signin text-center">
+            <label for="email-wow" class="sr-only">Email</label>
+            <input id="email-wow" class="form-control" v-model="email"
+                   type="text" placeholder="email" required autofocus />
+            <button type="submit" @click="createUser" class="btn btn-lg btn-primary btn-block">S'inscrire</button>
+        </form>
     </div>
 </template>
 
@@ -55,7 +52,6 @@
                         if (response != null) {
                             this.createdUser = response.data;
                             this.getUsers();
-                            EventBus.$emit('REFRESH_USERS');
                         }
                     });
             }

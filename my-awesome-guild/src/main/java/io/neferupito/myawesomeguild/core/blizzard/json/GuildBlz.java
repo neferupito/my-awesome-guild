@@ -1,12 +1,9 @@
 package io.neferupito.myawesomeguild.core.blizzard.json;
 
 import com.google.gson.annotations.SerializedName;
-import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

@@ -9,6 +9,7 @@ public class MembershipDto implements Comparable<MembershipDto> {
 
     private Integer rank;
     private Long wowCharacterId;
+    private Long guildId;
 
     @Override
     public int compareTo(MembershipDto m) {

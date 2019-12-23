@@ -2,7 +2,6 @@ package io.neferupito.myawesomeguild.api.controller.wow;
 
 import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.service.wow.WowDataService;
-import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

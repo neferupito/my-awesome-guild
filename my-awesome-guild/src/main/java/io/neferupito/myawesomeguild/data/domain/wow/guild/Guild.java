@@ -30,6 +30,9 @@ public class Guild {
 
     private Faction faction;
 
+    @OneToOne
+    private GuildAuthConfig authConfig;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", locale = "fr_FR", timezone = "Europe/Paris")
     private Date lastUpdate;
 

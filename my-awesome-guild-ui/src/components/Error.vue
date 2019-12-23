@@ -1,10 +1,5 @@
 <template>
-    <div>
-        <div v-if="message != null"  class="error">{{message}}
-            <button @click="eraseMessage">OK</button>
-            <br />
-            <br />
-        </div>
+    <div v-if="message != null" class="container bg-danger text-center rounded mt-2">{{message}}
     </div>
 </template>
 
@@ -27,6 +22,9 @@
         mounted() {
             EventBus.$on('SHOW_ERROR_MESSAGE', (message) => {
                 this.message = message;
+                setTimeout(() => {
+                    this.eraseMessage();
+                }, 2000);
             });
         }
     }

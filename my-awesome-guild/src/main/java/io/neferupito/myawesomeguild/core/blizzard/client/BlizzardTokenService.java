@@ -43,7 +43,7 @@ public class BlizzardTokenService {
         in.close();
         con.disconnect();
         token = new Gson().fromJson(content.toString(), TokenBlz.class);
-        System.err.println("new Token: "+token.getToken());
+        System.err.println("new Token: " + token.getToken());
     }
 
     @Scheduled(fixedDelay = 600_000)

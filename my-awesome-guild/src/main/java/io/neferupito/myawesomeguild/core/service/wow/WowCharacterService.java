@@ -91,6 +91,7 @@ public class WowCharacterService {
         }
 
         wowCharacter.setUser(user);
+        wowCharacter.setClaimed(true);
         wowCharacterRepository.save(wowCharacter);
     }
 
@@ -103,10 +104,12 @@ public class WowCharacterService {
 
         WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
         User user = wowCharacter.getUser();
+        boolean isClaimed = wowCharacter.isClaimed();
         WowCharacterBlz wowCharacterBlz = blizzardClient.importCharacter(wowCharacter.getRegion().name(), wowCharacter.getRealm().getSlug(), wowCharacter.getName());
         wowGuildService.refreshWowCharacterMembership(wowCharacter, wowCharacterBlz);
         wowCharacter = transformWowCharacter(wowCharacter.getRegion(), wowCharacterBlz);
         wowCharacter.setUser(user);
+        wowCharacter.setClaimed(isClaimed);
         wowCharacter.setLastUpdate(new Date());
         wowCharacter.setAvatarUrl(blizzardClient.importCharacterMedia(wowCharacter.getRegion().name(), wowCharacter.getRealm().getSlug(), wowCharacter.getName()).getAvatarURL());
 
@@ -119,9 +122,14 @@ public class WowCharacterService {
         return wowCharacter;
     }
 
-    public void deleteWowCharacter(Long wowCharacterId) throws AwesomeException {
+    public void deleteWowCharacterLink(Long wowCharacterId, String userEmail) throws AwesomeException {
         try {
-            wowCharacterRepository.deleteById(wowCharacterId);
+            WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
+            if (wowCharacter.getUser().getEmail().equalsIgnoreCase(userEmail)) {
+                wowCharacter.setUser(null);
+                wowCharacter.setClaimed(false);
+                wowCharacterRepository.save(wowCharacter);
+            }
         } catch (Exception e) {
             throw new AwesomeException(HttpStatus.FORBIDDEN, "Suppression du personnage " + wowCharacterId + " non autorisé");
         }
@@ -152,6 +160,7 @@ public class WowCharacterService {
                 .wowClass(wowClass)
                 .mainSpec(spec)
                 .lastUpdate(new Date())
+                .isClaimed(false)
                 .build();
     }
 }
