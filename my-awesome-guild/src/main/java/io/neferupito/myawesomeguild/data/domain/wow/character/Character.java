@@ -20,7 +20,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WowCharacter {
+public class Character {
 
     @Id
     private Long id;

@@ -1,6 +1,6 @@
 package io.neferupito.myawesomeguild.data.domain.wow.guild;
 
-import io.neferupito.myawesomeguild.data.domain.wow.character.WowCharacter;
+import io.neferupito.myawesomeguild.data.domain.wow.character.Character;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class Membership {
     private Long id;
 
     @OneToOne
-    private WowCharacter wowCharacter;
+    private Character character;
 
     @ManyToOne
     private Guild guild;

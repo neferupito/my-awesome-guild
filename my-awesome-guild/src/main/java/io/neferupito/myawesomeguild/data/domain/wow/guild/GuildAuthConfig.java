@@ -1,6 +1,7 @@
 package io.neferupito.myawesomeguild.data.domain.wow.guild;
 
-import io.neferupito.myawesomeguild.data.domain.wow.character.WowCharacter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.neferupito.myawesomeguild.data.domain.wow.character.Character;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,15 +19,17 @@ import java.util.List;
 public class GuildAuthConfig {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @OneToOne(mappedBy = "authConfig")
+    @JsonIgnore
     private Guild guild;
 
     @OneToOne
-    private WowCharacter guildMaster;
+    private Character guildMaster;
 
     @OneToMany
-    private List<WowCharacter> officers;
+    private List<Character> officers;
 
 }

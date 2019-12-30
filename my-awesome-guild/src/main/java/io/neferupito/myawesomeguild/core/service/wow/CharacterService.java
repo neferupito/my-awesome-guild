@@ -4,9 +4,9 @@ import io.neferupito.myawesomeguild.api.controller.AwesomeException;
 import io.neferupito.myawesomeguild.core.blizzard.client.CharacterBlizzardClient;
 import io.neferupito.myawesomeguild.core.blizzard.json.WowCharacterBlz;
 import io.neferupito.myawesomeguild.data.domain.user.User;
+import io.neferupito.myawesomeguild.data.domain.wow.character.Character;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Race;
 import io.neferupito.myawesomeguild.data.domain.wow.character.Specialization;
-import io.neferupito.myawesomeguild.data.domain.wow.character.WowCharacter;
 import io.neferupito.myawesomeguild.data.domain.wow.character.WowClass;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Faction;
 import io.neferupito.myawesomeguild.data.domain.wow.server.Realm;
@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class WowCharacterService {
+public class CharacterService {
 
     @Autowired
-    private WowCharacterRepository wowCharacterRepository;
+    private CharacterRepository characterRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -39,19 +39,19 @@ public class WowCharacterService {
     @Autowired
     private CharacterBlizzardClient blizzardClient;
     @Autowired
-    private WowGuildService wowGuildService;
+    private GuildService guildService;
 
-    public WowCharacter findWowCharacterById(Long wowCharacterId) throws AwesomeException {
-        Optional<WowCharacter> wowCharacterOpt = wowCharacterRepository.findById(wowCharacterId);
+    public Character getCharacterById(Long wowCharacterId) throws AwesomeException {
+        Optional<Character> wowCharacterOpt = characterRepository.findById(wowCharacterId);
         if (wowCharacterOpt.isEmpty()) {
             throw new AwesomeException(HttpStatus.NOT_FOUND, "Personnage " + wowCharacterId + " inconnu");
         }
         return wowCharacterOpt.get();
     }
 
-    public WowCharacter importNewWowCharacter(String region, String slugRealm, String name) throws AwesomeException {
+    public Character importCharacterFromBlizzard(String region, String slugRealm, String name) throws AwesomeException {
         WowCharacterBlz wowCharacterBlz = blizzardClient.importCharacter(region, slugRealm, name);
-        Optional<WowCharacter> existingCharacter = wowCharacterRepository.findById(wowCharacterBlz.getId());
+        Optional<Character> existingCharacter = characterRepository.findById(wowCharacterBlz.getId());
         if (existingCharacter.isPresent()) {
             return existingCharacter.get();
         }
@@ -59,10 +59,10 @@ public class WowCharacterService {
         if (wowCharacterBlz.getGuild() != null) {
             Thread thread = new Thread(() -> {
                 try {
-                    wowGuildService.findGuildById(wowCharacterBlz.getGuild().getId());
+                    guildService.getGuildById(wowCharacterBlz.getGuild().getId());
                 } catch (AwesomeException e) {
                     try {
-                        wowGuildService.importNewWowGuildByUrl(wowCharacterBlz.getGuild().getKey().getHref());
+                        guildService.importGuildFromBlizzardByUrl(wowCharacterBlz.getGuild().getKey().getHref());
                     } catch (AwesomeException ex) {
                         ex.printStackTrace();
                     }
@@ -71,71 +71,71 @@ public class WowCharacterService {
             thread.start();
         }
 
-        WowCharacter character = transformWowCharacter(Region.findValue(region), wowCharacterBlz);
+        Character character = transformCharacterBlz(Region.findValue(region), wowCharacterBlz);
         character.setAvatarUrl(blizzardClient.importCharacterMedia(region, slugRealm, name).getAvatarURL());
 
         try {
-            return wowCharacterRepository.save(character);
+            return characterRepository.save(character);
         } catch (Exception e) {
             throw new AwesomeException(HttpStatus.INTERNAL_SERVER_ERROR, "Problème lors de l'entrée dans la DB du personnage " + wowCharacterBlz.getId());
         }
     }
 
-    public void linkWowCharacterToUser(Long wowCharacterId, String userEmail) throws AwesomeException {
+    public void linkCharacterToUser(Long wowCharacterId, String userEmail) throws AwesomeException {
 
-        User user = findUserByEmail(userEmail);
-        WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
+        User user = getUserByEmail(userEmail);
+        Character character = getCharacterById(wowCharacterId);
 
-        if (wowCharacter.getUser() != null) {
-            throw new AwesomeException(HttpStatus.BAD_REQUEST, "Personnage " + wowCharacterId + " est déjà lié à l'utilisateur " + wowCharacter.getUser().getEmail());
+        if (character.getUser() != null) {
+            throw new AwesomeException(HttpStatus.BAD_REQUEST, "Personnage " + wowCharacterId + " est déjà lié à l'utilisateur " + character.getUser().getEmail());
         }
 
-        wowCharacter.setUser(user);
-        wowCharacter.setClaimed(true);
-        wowCharacterRepository.save(wowCharacter);
+        character.setUser(user);
+        character.setClaimed(true);
+        characterRepository.save(character);
     }
 
-    public List<WowCharacter> findAllCharactersByUser(String userEmail) throws AwesomeException {
-        User user = findUserByEmail(userEmail);
-        return wowCharacterRepository.findByUser(user);
+    public List<Character> getAllCharactersOfAnUser(String userEmail) throws AwesomeException {
+        User user = getUserByEmail(userEmail);
+        return characterRepository.findByUser(user);
     }
 
-    public WowCharacter refreshWowCharacter(Long wowCharacterId) throws AwesomeException {
+    public Character refreshCharacter(Long wowCharacterId) throws AwesomeException {
 
-        WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
-        User user = wowCharacter.getUser();
-        boolean isClaimed = wowCharacter.isClaimed();
-        WowCharacterBlz wowCharacterBlz = blizzardClient.importCharacter(wowCharacter.getRegion().name(), wowCharacter.getRealm().getSlug(), wowCharacter.getName());
-        wowGuildService.refreshWowCharacterMembership(wowCharacter, wowCharacterBlz);
-        wowCharacter = transformWowCharacter(wowCharacter.getRegion(), wowCharacterBlz);
-        wowCharacter.setUser(user);
-        wowCharacter.setClaimed(isClaimed);
-        wowCharacter.setLastUpdate(new Date());
-        wowCharacter.setAvatarUrl(blizzardClient.importCharacterMedia(wowCharacter.getRegion().name(), wowCharacter.getRealm().getSlug(), wowCharacter.getName()).getAvatarURL());
+        Character character = getCharacterById(wowCharacterId);
+        User user = character.getUser();
+        boolean isClaimed = character.isClaimed();
+        WowCharacterBlz wowCharacterBlz = blizzardClient.importCharacter(character.getRegion().name(), character.getRealm().getSlug(), character.getName());
+        guildService.refreshCharacterMembership(character, wowCharacterBlz);
+        character = transformCharacterBlz(character.getRegion(), wowCharacterBlz);
+        character.setUser(user);
+        character.setClaimed(isClaimed);
+        character.setLastUpdate(new Date());
+        character.setAvatarUrl(blizzardClient.importCharacterMedia(character.getRegion().name(), character.getRealm().getSlug(), character.getName()).getAvatarURL());
 
         try {
-            wowCharacter = wowCharacterRepository.save(wowCharacter);
+            character = characterRepository.save(character);
         } catch (Exception e) {
             throw new AwesomeException(HttpStatus.INTERNAL_SERVER_ERROR, "Problème lors de la mise à jour de la base de données pour WowCharacter " + wowCharacterId);
         }
 
-        return wowCharacter;
+        return character;
     }
 
-    public void deleteWowCharacterLink(Long wowCharacterId, String userEmail) throws AwesomeException {
+    public void deleteCharacterLink(Long wowCharacterId, String userEmail) throws AwesomeException {
         try {
-            WowCharacter wowCharacter = findWowCharacterById(wowCharacterId);
-            if (wowCharacter.getUser().getEmail().equalsIgnoreCase(userEmail)) {
-                wowCharacter.setUser(null);
-                wowCharacter.setClaimed(false);
-                wowCharacterRepository.save(wowCharacter);
+            Character character = getCharacterById(wowCharacterId);
+            if (character.getUser().getEmail().equalsIgnoreCase(userEmail)) {
+                character.setUser(null);
+                character.setClaimed(false);
+                characterRepository.save(character);
             }
         } catch (Exception e) {
             throw new AwesomeException(HttpStatus.FORBIDDEN, "Suppression du personnage " + wowCharacterId + " non autorisé");
         }
     }
 
-    private User findUserByEmail(String userEmail) throws AwesomeException {
+    private User getUserByEmail(String userEmail) throws AwesomeException {
         Optional<User> userOpt = userRepository.findByEmail(userEmail);
         if (userOpt.isEmpty()) {
             throw new AwesomeException(HttpStatus.NOT_FOUND, "Utilisateur " + userEmail + " inconnu");
@@ -143,13 +143,13 @@ public class WowCharacterService {
         return userOpt.get();
     }
 
-    private WowCharacter transformWowCharacter(Region region, WowCharacterBlz json) {
+    private Character transformCharacterBlz(Region region, WowCharacterBlz json) {
         Race race = raceRepository.findById(json.getRace().getId()).get();
         Realm realm = realmRepository.findById(json.getRealm().getId()).get();
         WowClass wowClass = wowClassRepository.findById(json.getCharacterClass().getId()).get();
         Specialization spec = specializationRepository.findById(json.getActiveSpec().getId()).get();
 
-        return WowCharacter.builder()
+        return Character.builder()
                 .id(json.getId())
                 .name(json.getName())
                 .race(race)

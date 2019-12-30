@@ -20,21 +20,21 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/user")
-    public ResponseEntity createNewUser(
+    public ResponseEntity<Object> createNewUser(
 //            @Valid
             @RequestBody
                     User user) {
         try {
-            return ResponseEntity.ok(userService.createNewUser(user));
+            return ResponseEntity.ok(userService.addNewUser(user));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
     @GetMapping("/users")
-    public ResponseEntity findAllUsers() {
+    public ResponseEntity<Object> findAllUsers() {
         try {
-            return ResponseEntity.ok(userService.findAllUsers());
+            return ResponseEntity.ok(userService.getAllUsers());
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }

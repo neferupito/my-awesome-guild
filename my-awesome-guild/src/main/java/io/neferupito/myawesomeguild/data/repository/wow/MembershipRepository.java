@@ -1,6 +1,6 @@
 package io.neferupito.myawesomeguild.data.repository.wow;
 
-import io.neferupito.myawesomeguild.data.domain.wow.character.WowCharacter;
+import io.neferupito.myawesomeguild.data.domain.wow.character.Character;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
 import org.springframework.data.repository.CrudRepository;
@@ -16,6 +16,6 @@ public interface MembershipRepository extends CrudRepository<Membership, Long> {
 
     List<Membership> findAllByGuild(Guild guild);
 
-    Membership findByWowCharacter(WowCharacter wowCharacter);
+    Membership findByCharacter(Character character);
 
 }

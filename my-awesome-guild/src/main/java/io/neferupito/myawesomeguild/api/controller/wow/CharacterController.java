@@ -2,22 +2,23 @@ package io.neferupito.myawesomeguild.api.controller.wow;
 
 
 import io.neferupito.myawesomeguild.api.controller.AwesomeException;
-import io.neferupito.myawesomeguild.core.service.wow.WowCharacterService;
-import io.neferupito.myawesomeguild.core.service.wow.WowGuildService;
+import io.neferupito.myawesomeguild.core.service.wow.CharacterService;
+import io.neferupito.myawesomeguild.core.service.wow.GuildService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class WowCharacterController {
+@RequestMapping("/wow")
+public class CharacterController {
 
     @Autowired
-    private WowCharacterService wowCharacterService;
+    private CharacterService characterService;
     @Autowired
-    private WowGuildService wowGuildService;
+    private GuildService guildService;
 
-    @GetMapping("/wow-character-import")
-    public ResponseEntity<Object> importCharacter(
+    @GetMapping("/character-import")
+    public ResponseEntity<Object> importCharacterFromBlizzard(
             @RequestParam
                     String region,
             @RequestParam
@@ -26,65 +27,65 @@ public class WowCharacterController {
                     String name
     ) {
         try {
-            return ResponseEntity.ok(wowCharacterService.importNewWowCharacter(region, slugRealm, name));
+            return ResponseEntity.ok(characterService.importCharacterFromBlizzard(region, slugRealm, name));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
-    @GetMapping("/wow-character/{wowCharacterId}/link")
-    public ResponseEntity<Object> linkWowCharacterToUser(
+    @GetMapping("/character/{wowCharacterId}/link")
+    public ResponseEntity<Object> linkCharacterToUser(
             @RequestParam
                     String userEmail,
             @PathVariable
                     Long wowCharacterId
     ) {
         try {
-            wowCharacterService.linkWowCharacterToUser(wowCharacterId, userEmail);
+            characterService.linkCharacterToUser(wowCharacterId, userEmail);
             return ResponseEntity.ok().build();
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
-    @GetMapping("/wow-character/{wowCharacterId}/guild")
+    @GetMapping("/character/{wowCharacterId}/guild")
     public ResponseEntity<Object> getCharacterMembership(
             @PathVariable
                     Long wowCharacterId
     ) {
         try {
-            return ResponseEntity.ok(wowGuildService.findMembershipByWowCharacterId(wowCharacterId));
+            return ResponseEntity.ok(guildService.getCharacterMembership(wowCharacterId));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
-    @GetMapping("/wow-character/{wowCharacterId}")
-    public ResponseEntity<Object> getWowCharacter(
+    @GetMapping("/character/{wowCharacterId}")
+    public ResponseEntity<Object> getCharacter(
             @PathVariable
                     Long wowCharacterId
     ) {
         try {
-            return ResponseEntity.ok(wowCharacterService.findWowCharacterById(wowCharacterId));
+            return ResponseEntity.ok(characterService.getCharacterById(wowCharacterId));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
-    @PutMapping("/wow-character/{wowCharacterId}")
-    public ResponseEntity<Object> refreshWowCharacter(
+    @PutMapping("/character/{wowCharacterId}")
+    public ResponseEntity<Object> refreshCharacter(
             @PathVariable
                     Long wowCharacterId
     ) {
         try {
-            return ResponseEntity.ok(wowCharacterService.refreshWowCharacter(wowCharacterId));
+            return ResponseEntity.ok(characterService.refreshCharacter(wowCharacterId));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }
     }
 
-    @DeleteMapping("/wow-character/{wowCharacterId}/link")
-    public ResponseEntity<Object> deleteWowCharacter(
+    @DeleteMapping("/character/{wowCharacterId}/link")
+    public ResponseEntity<Object> deleteCharacterLink(
             @PathVariable
                     Long wowCharacterId,
             @RequestParam
@@ -92,7 +93,7 @@ public class WowCharacterController {
     ) {
         try {
 
-            wowCharacterService.deleteWowCharacterLink(wowCharacterId, userEmail);
+            characterService.deleteCharacterLink(wowCharacterId, userEmail);
             return ResponseEntity.ok().build();
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
@@ -100,12 +101,12 @@ public class WowCharacterController {
     }
 
     @GetMapping("/characters")
-    public ResponseEntity<Object> findAllCharactersByUser(
+    public ResponseEntity<Object> getAllCharactersOfAnUser(
             @RequestParam
                     String userEmail
     ) {
         try {
-            return ResponseEntity.ok(wowCharacterService.findAllCharactersByUser(userEmail));
+            return ResponseEntity.ok(characterService.getAllCharactersOfAnUser(userEmail));
         } catch (AwesomeException e) {
             return e.buildResponseEntity();
         }

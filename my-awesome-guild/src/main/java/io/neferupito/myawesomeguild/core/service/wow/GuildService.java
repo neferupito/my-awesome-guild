@@ -6,7 +6,7 @@ import io.neferupito.myawesomeguild.core.blizzard.client.GuildBlizzardClient;
 import io.neferupito.myawesomeguild.core.blizzard.json.GuildBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.RosterBlz;
 import io.neferupito.myawesomeguild.core.blizzard.json.WowCharacterBlz;
-import io.neferupito.myawesomeguild.data.domain.wow.character.WowCharacter;
+import io.neferupito.myawesomeguild.data.domain.wow.character.Character;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Guild;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.GuildAuthConfig;
 import io.neferupito.myawesomeguild.data.domain.wow.guild.Membership;
@@ -27,7 +27,7 @@ import static java.lang.Thread.sleep;
 
 @Service
 @Slf4j
-public class WowGuildService {
+public class GuildService {
 
     @Autowired
     private GuildBlizzardClient blizzardClient;
@@ -35,15 +35,17 @@ public class WowGuildService {
     @Autowired
     private GuildRepository guildRepository;
     @Autowired
-    private WowCharacterService wowCharacterService;
+    private CharacterService characterService;
+    @Autowired
+    private GuildAuthConfigService guildAuthConfigService;
     @Autowired
     private RealmRepository realmRepository;
     @Autowired
     private MembershipRepository membershipRepository;
     @Autowired
-    private GuildAuthConfigRepository authConfigRepository;
+    private GuildAuthConfigRepository guildAuthConfigRepository;
 
-    public Guild findGuildById(Long guildId) throws AwesomeException {
+    public Guild getGuildById(Long guildId) throws AwesomeException {
         Optional<Guild> guild = guildRepository.findById(guildId);
         if (guild.isEmpty()) {
             throw new AwesomeException(HttpStatus.NOT_FOUND, "Guilde " + guildId + " inconnu");
@@ -51,10 +53,10 @@ public class WowGuildService {
         return guild.get();
     }
 
-    public List<MembershipDto> findAllMembersFromGuild(Long guildId) throws AwesomeException {
+    public List<MembershipDto> getGuildRosterIds(Long guildId) throws AwesomeException {
         List<Membership> members;
         List<MembershipDto> dtos = new ArrayList<>();
-        members = membershipRepository.findAllByGuild(findGuildById(guildId));
+        members = membershipRepository.findAllByGuild(getGuildById(guildId));
         for (Membership member :
                 members) {
             dtos.add(transformMembershipDto(member));
@@ -63,45 +65,45 @@ public class WowGuildService {
         return dtos;
     }
 
-    public List<MembershipDto> refreshRoster(Long guildId) throws AwesomeException {
+    public List<MembershipDto> refreshGuildRoster(Long guildId) throws AwesomeException {
         //TODO: error handling
-        Guild guild = findGuildById(guildId);
+        Guild guild = getGuildById(guildId);
         RosterBlz roster = blizzardClient.importRoster(guild.getRealm().getRegion().name(), guild.getRealm().getSlug(), guild.getSlugName());
         for (RosterBlz.Mmb mmb : roster.getMembers()) {
-            WowCharacter wowCharacter;
+            Character character;
             try {
-                wowCharacter = wowCharacterService.findWowCharacterById(mmb.getCharacter().getId());
+                character = characterService.getCharacterById(mmb.getCharacter().getId());
             } catch (AwesomeException e) {
                 if (e.getStatus().equals(HttpStatus.NOT_FOUND)) {
-                    wowCharacter = wowCharacterService.importNewWowCharacter(guild.getRealm().getRegion().name(), mmb.getCharacter().getRealm().getSlug(), mmb.getCharacter().getName());
+                    character = characterService.importCharacterFromBlizzard(guild.getRealm().getRegion().name(), mmb.getCharacter().getRealm().getSlug(), mmb.getCharacter().getName());
                 } else {
                     throw e;
                 }
             }
 
-            Optional<Membership> previousMembership = checkIfWowCharacterAlreadyHasAMembership(wowCharacter);
+            Optional<Membership> previousMembership = checkIfCharacterHasAlreadyAMembership(character);
             previousMembership.ifPresent(membership -> membershipRepository.delete(membership));
             membershipRepository.save(transformMembership(guild.getRealm().getRegion().name(), mmb, guild));
 
             if (mmb.getRank() == 0 && !mmb.getCharacter().getId().equals(guild.getAuthConfig().getGuildMaster().getId())) {
                 GuildAuthConfig authConfig = guild.getAuthConfig();
-                authConfig.setGuildMaster(wowCharacter);
-                authConfigRepository.save(authConfig);
+                authConfig.setGuildMaster(character);
+                guildAuthConfigRepository.save(authConfig);
             }
         }
-        return findAllMembersFromGuild(guildId);
+        return getGuildRosterIds(guildId);
     }
 
-    public Membership findMembershipByWowCharacterId(Long wowCharacterId) throws AwesomeException {
-        WowCharacter wowCharacter = wowCharacterService.findWowCharacterById(wowCharacterId);
-        return membershipRepository.findByWowCharacter(wowCharacter);
+    public Membership getCharacterMembership(Long wowCharacterId) throws AwesomeException {
+        Character character = characterService.getCharacterById(wowCharacterId);
+        return membershipRepository.findByCharacter(character);
     }
 
-    public Membership findMembershipByWowCharacter(WowCharacter wowCharacter) {
-        return membershipRepository.findByWowCharacter(wowCharacter);
+    public Membership getCharacterMembership(Character character) {
+        return membershipRepository.findByCharacter(character);
     }
 
-    public Guild importNewWowGuildByUrl(String url) throws AwesomeException {
+    public Guild importGuildFromBlizzardByUrl(String url) throws AwesomeException {
         GuildBlz guildBlz = blizzardClient.importGuildByUrl(url + "&locale=fr_FR");
 
         Optional<Guild> existingGuild = guildRepository.findById(guildBlz.getId());
@@ -109,7 +111,7 @@ public class WowGuildService {
             return existingGuild.get();
         }
 
-        Guild newGuild = transformGuild(guildBlz);
+        Guild newGuild = transformGuildBlz(guildBlz);
         try {
             guildRepository.save(newGuild);
             Thread thread = new Thread(() -> {
@@ -127,15 +129,15 @@ public class WowGuildService {
         }
     }
 
-    public Guild importNewWowGuild(String region, String slugRealm, String name) throws AwesomeException {
-        GuildBlz guildBlz = blizzardClient.importGuild(region, slugRealm, createSlugName(name));
+    public Guild importGuildFromBlizzard(String region, String slugRealm, String name) throws AwesomeException {
+        GuildBlz guildBlz = blizzardClient.importGuild(region, slugRealm, getSlugName(name));
 
         Optional<Guild> existingGuild = guildRepository.findById(guildBlz.getId());
         if (existingGuild.isPresent()) {
             return existingGuild.get();
         }
 
-        Guild newGuild = transformGuild(guildBlz);
+        Guild newGuild = transformGuildBlz(guildBlz);
         try {
             guildRepository.save(newGuild);
             Thread thread = new Thread(() -> {
@@ -160,9 +162,9 @@ public class WowGuildService {
             Membership m = transformMembership(region, mmb, guild);
             if (m != null) {
                 if (m.getRank() == 0) {
-                    addGuildAuthConfig(guild.getId(),
+                    guildAuthConfigService.addGuildAuthConfig(guild.getId(),
                             GuildAuthConfig.builder()
-                                    .guildMaster(m.getWowCharacter())
+                                    .guildMaster(m.getCharacter())
                                     .build());
                 }
                 membershipRepository.save(m);
@@ -170,24 +172,24 @@ public class WowGuildService {
         }
     }
 
-    public void refreshWowCharacterMembership(WowCharacter oldWowCharacter, WowCharacterBlz newWowCharacter) throws AwesomeException {
-        Membership membership = findMembershipByWowCharacter(oldWowCharacter);
+    public void refreshCharacterMembership(Character oldCharacter, WowCharacterBlz newWowCharacter) throws AwesomeException {
+        Membership membership = getCharacterMembership(oldCharacter);
         if (membership == null && newWowCharacter.getGuild() != null) {
-            importNewWowGuildByUrl(newWowCharacter.getGuild().getKey().getHref());
+            importGuildFromBlizzardByUrl(newWowCharacter.getGuild().getKey().getHref());
         }
     }
 
-    public WowCharacter getGuildMaster(Long guildId) throws AwesomeException {
-        Guild guild = findGuildById(guildId);
+    public Character getGuildMaster(Long guildId) throws AwesomeException {
+        Guild guild = getGuildById(guildId);
         return guild.getAuthConfig().getGuildMaster();
     }
 
-    private Guild transformGuild(GuildBlz guildBlz) {
+    private Guild transformGuildBlz(GuildBlz guildBlz) {
         Realm realm = realmRepository.findById(guildBlz.getRealm().getId()).get();
         return Guild.builder()
                 .id(guildBlz.getId())
                 .name(guildBlz.getName())
-                .slugName(createSlugName(guildBlz.getName()))
+                .slugName(getSlugName(guildBlz.getName()))
                 .faction(Faction.valueOf(guildBlz.getFaction().getType()))
                 .realm(realm)
                 .lastUpdate(new Date())
@@ -196,13 +198,13 @@ public class WowGuildService {
 
     private Membership transformMembership(String region, RosterBlz.Mmb membership, Guild guild) throws AwesomeException {
         // TODO: review error handling
-        WowCharacter wowCharacter = null;
+        Character character = null;
         try {
-            wowCharacter = wowCharacterService.findWowCharacterById(membership.getCharacter().getId());
+            character = characterService.getCharacterById(membership.getCharacter().getId());
         } catch (AwesomeException e) {
             if (e.getStatus().equals(HttpStatus.NOT_FOUND)) {
                 try {
-                    wowCharacter = wowCharacterService.importNewWowCharacter(region, membership.getCharacter().getRealm().getSlug(), membership.getCharacter().getName());
+                    character = characterService.importCharacterFromBlizzard(region, membership.getCharacter().getRealm().getSlug(), membership.getCharacter().getName());
                 } catch (AwesomeException ex) {
                     ex.printStackTrace();
                     return null;
@@ -210,55 +212,41 @@ public class WowGuildService {
             }
         }
 
-        Optional<Membership> existingMembership = checkIfWowCharacterAlreadyHasAMembership(wowCharacter);
+        Optional<Membership> existingMembership = checkIfCharacterHasAlreadyAMembership(character);
         if (existingMembership.isPresent()) {
             Guild previousGuild = existingMembership.get().getGuild();
-            refreshRoster(previousGuild.getId());
+            refreshGuildRoster(previousGuild.getId());
             membershipRepository.delete(existingMembership.get());
         }
 
         return Membership.builder()
-                .wowCharacter(wowCharacter)
+                .character(character)
                 .rank(membership.getRank())
                 .guild(guild)
                 .build();
     }
 
-    private Optional<Membership> checkIfWowCharacterAlreadyHasAMembership(WowCharacter wowCharacter) {
-        Membership membership = findMembershipByWowCharacter(wowCharacter);
+    private Optional<Membership> checkIfCharacterHasAlreadyAMembership(Character character) {
+        Membership membership = getCharacterMembership(character);
         return Optional.ofNullable(membership);
     }
 
-    private String createSlugName(String guildName) {
-        guildName = guildName.toLowerCase();
-        guildName = guildName.replace("'", "");
-        guildName = guildName.replace("-", "");
-        guildName = guildName.replace(" ", "-");
+    private String getSlugName(String guildName) {
+        if (!guildName.contains("-")) {
+            guildName = guildName.toLowerCase();
+            guildName = guildName.replace("'", "");
+            guildName = guildName.replace("-", "");
+            guildName = guildName.replace(" ", "-");
+        }
         return guildName;
     }
 
     private MembershipDto transformMembershipDto(Membership membership) {
         return MembershipDto.builder()
-                .wowCharacterId(membership.getWowCharacter().getId())
+                .wowCharacterId(membership.getCharacter().getId())
                 .rank(membership.getRank())
                 .guildId(membership.getGuild().getId())
                 .build();
-    }
-
-    public void addGuildAuthConfig(Long guildId, GuildAuthConfig guildAuthConfig) throws AwesomeException {
-        Guild guild = findGuildById(guildId);
-        guildAuthConfig = authConfigRepository.save(guildAuthConfig);
-        guild.setAuthConfig(guildAuthConfig);
-        guildRepository.save(guild);
-    }
-
-    public GuildAuthConfig getGuildAuthConfig(Long guildId) throws AwesomeException {
-        Guild guild = findGuildById(guildId);
-        if (guild.getAuthConfig() != null) {
-            return guild.getAuthConfig();
-        } else {
-            throw new AwesomeException(HttpStatus.NOT_FOUND, "Pas de Auth Config");
-        }
     }
 
 }

@@ -13,7 +13,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createNewUser(User user) throws AwesomeException {
+    public User addNewUser(User user) throws AwesomeException {
         try {
             return userRepository.save(user);
         } catch (Exception e) {
@@ -21,7 +21,7 @@ public class UserService {
         }
     }
 
-    public Iterable<User> findAllUsers() throws AwesomeException {
+    public Iterable<User> getAllUsers() throws AwesomeException {
         try {
             return userRepository.findAll();
 
